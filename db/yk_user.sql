@@ -1,8 +1,8 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2019/11/19 21:45:36                          */
+/* Created on:     2019/11/21 10:19:41                          */
 /*==============================================================*/
-use youke;
+
 
 drop table if exists billing_details;
 
@@ -12,13 +12,13 @@ drop table if exists information;
 
 drop table if exists mycourse;
 
-drop table if exists order;
-
-drop table if exists user;
-
 drop table if exists wallet;
 
 drop table if exists yk_lesson;
+
+drop table if exists yk_order;
+
+drop table if exists yk_user;
 
 /*==============================================================*/
 /* Table: billing_details                                       */
@@ -78,44 +78,20 @@ create table mycourse
 );
 
 /*==============================================================*/
-/* Table: "order"                                               */
-/*==============================================================*/
-create table user_order
-(
-   id                   int not null auto_increment,
-   yk_goods_id          int,
-   yk_isorderStatus     bool,
-   yk_total_price       float,
-   yk_user_id           int,
-   primary key (id)
-);
-
-/*==============================================================*/
-/* Table: user                                                  */
-/*==============================================================*/
-create table user
-(
-   id                   int not null,
-   yk_nume              varchar(50) not null,
-   yk_auto_string       varchar(50) not null,
-   yk_phone             int not null,
-   sys_auth             bool,
-   primary key (id)
-);
-
-/*==============================================================*/
 /* Table: wallet                                                */
 /*==============================================================*/
 create table wallet
 (
    id                   int not null auto_increment,
    yk_balance           char(50),
-   yk_pay_pwd           char(50),
+   yk_pay_pwd           char(100),
    yk_user_id           int,
    yk_bank_card         int,
    yk_integral          int,
    yk_member            char(50),
    yk_discount          char(10),
+   yk_paymenType        char(5),
+   yk_transType         char(5),
    primary key (id)
 );
 
@@ -144,9 +120,34 @@ create table yk_lesson
    yk_course_chapter    char(20),
    yk_one_list_id       int,
    yk_tow_list_id       int,
+   yk_class_size        char(20),
    primary key (id)
 );
 
+/*==============================================================*/
+/* Table: yk_order                                              */
+/*==============================================================*/
+create table yk_order
+(
+   id                   int not null auto_increment,
+   yk_goods_id          int,
+   yk_isorderStatus     bool,
+   yk_total_price       float,
+   yk_user_id           int,
+   primary key (id)
+);
 
-
+/*==============================================================*/
+/* Table: yk_user                                               */
+/*==============================================================*/
+create table yk_user
+(
+   id                   int not null auto_increment,
+   yk_name              varchar(50),
+   yk_auto_string       varchar(100),
+   yk_emil              varchar(50),
+   yk_phone             varchar(50),
+   sys_auth             bool,
+   primary key (id)
+);
 
