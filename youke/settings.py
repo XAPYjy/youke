@@ -24,7 +24,7 @@ SECRET_KEY = '+=bc6s(@hgjdfc7fr5yvr)9cx4n%siasvy@o7h^9@1057)yb71'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -77,8 +77,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'youke',
-        # 'HOST': '47.92.132.161',
-        'HOST': 'localhost',
+        'HOST': '47.92.132.161',
+        # 'HOST': 'localhost',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'root',
@@ -120,7 +120,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# 静态资源的加载
 STATIC_URL = '/s/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'statics')
+]
 
 # 跨域允许的请求方式
 CORS_ALLOW_METHODS = (
@@ -153,17 +157,16 @@ CORS_ORIGIN_ALLOW_ALL = True  # 允许所有主机执行跨站点请求
 REST_FRAMEWORK = {
     # 重构renderer
     'DEFAULT_RENDERER_CLASSES': (
-        'util.renderer.YKrender',
+        'tools.renderer.YKrender',
     ),
 }
 # 配置redis缓存
 CACHES = {
-     'default': {
+    'default': {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://47.92.132.161:6379/1",
+        "LOCATION": "redis://47.92.132.161:6379/0",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
-
