@@ -33,22 +33,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-<<<<<<< HEAD
     'back_system',
-=======
     'yk_models',
     'ykuser',
->>>>>>> 229a5112c2263ab22daeaae144d896d46ecd0558
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-<<<<<<< HEAD
     'middleware.valid_login',
-=======
     'corsheaders.middleware.CorsMiddleware',
->>>>>>> 229a5112c2263ab22daeaae144d896d46ecd0558
     'django.middleware.common.CommonMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -79,25 +73,15 @@ WSGI_APPLICATION = 'youke.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'youke',
-<<<<<<< HEAD
-        'HOST': 'localhost',
-        'PORT': 3306,
-        'USER': 'root',
-        'PASSWORD': '123456',
-=======
-        # 'HOST': '47.92.132.161',
-        'HOST': 'localhost',
+        'NAME': 'mysql',
+        'HOST': '47.92.132.161',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'root',
->>>>>>> 229a5112c2263ab22daeaae144d896d46ecd0558
         'CHARSET': 'utf8'
     }
 }
 
-<<<<<<< HEAD
-=======
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -115,7 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
->>>>>>> 229a5112c2263ab22daeaae144d896d46ecd0558
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -130,7 +113,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-<<<<<<< HEAD
 
 # 静态资源文件
 STATIC_URL = '/s/'
@@ -143,12 +125,14 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/s/m/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
-
-# 配置缓存方案
+# 配置redis缓存
 CACHES = {
-    'redis': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION':'redis://localhost:6379/0'
+     'redis': {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://47.92.132.161:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
     },
     'default':{
         'BACKEND':'django.core.cache.backends.filebased.FileBasedCache',
@@ -159,15 +143,12 @@ CACHES = {
         }
     }
 }
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_COOKIE_NAME = 'session_id'
 SESSION_COOKIE_AGE = 604800    # 一周有效时长（秒）
 SESSION_CACHE_ALIAS = 'redis'  #缓存方案，默认default
-=======
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/s/'
 
 # 跨域允许的请求方式
 CORS_ALLOW_METHODS = (
@@ -203,15 +184,5 @@ REST_FRAMEWORK = {
         'util.renderer.YKrender',
     ),
 }
-# 配置redis缓存
-CACHES = {
-     'default': {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://47.92.132.161:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
 
->>>>>>> 229a5112c2263ab22daeaae144d896d46ecd0558
+
