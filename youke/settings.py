@@ -197,7 +197,7 @@ REST_FRAMEWORK = {
 }
 # 配置redis缓存
 CACHES = {
-     'default': {
+     'redis': {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://47.92.132.161:6379/1",
         "OPTIONS": {

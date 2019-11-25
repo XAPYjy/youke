@@ -108,8 +108,8 @@ class YkUser(models.Model):
     yk_name = models.CharField(max_length=50, blank=True, null=True)
     yk_auto_string = models.CharField(max_length=100, blank=True, null=True)
     yk_emil = models.CharField(max_length=50, blank=True, null=True)
-    yk_phone = models.IntegerField(blank=True, null=True)
-    sys_auth = models.IntegerField(blank=True, null=True)
+    yk_phone = models.CharField(max_length=50,blank=True, null=True)
+    sys_auth = models.BooleanField(default=True)
 
     class Meta:
         managed = False
