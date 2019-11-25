@@ -12,8 +12,6 @@ drop table if exists yk_downloadRecord;
 
 drop table if exists yk_information;
 
-drop table if exists yk_lesson;
-
 drop table if exists yk_my_class;
 
 drop table if exists yk_order;
@@ -65,35 +63,6 @@ create table yk_information
    yk_IDnumber          varchar(50),
    yk_signature         varchar(500),
    yk_user_id           int,
-   primary key (id)
-);
-
-/*==============================================================*/
-/* Table: yk_lesson                                             */
-/*==============================================================*/
-create table yk_lesson
-(
-   id                   int not null auto_increment,
-   yk_video_jump_link   varchar(200),
-   yk_lesson_name       varchar(50),
-   yk_lesson_price      float,
-   yk_lesson_describe   varchar(200),
-   yk_teacher_describe  varchar(100),
-   yk_lesson_contents   varchar(50),
-   yk_lesson_contents_mark int,
-   yk_lesson_img        varchar(200),
-   yk_rotaion_id        int,
-   yk_recommend_id      int,
-   yk_lesson_price_type varchar(50),
-   yk_lesson_dis_price  float,
-   yk_lesson_list       int,
-   yk_user_id           int,
-   yk_buy_amount        int,
-   yk_watch_amount      int,
-   yk_course_chapter    char(20),
-   yk_one_list_id       int,
-   yk_tow_list_id       int,
-   yk_class_size        char(20),
    primary key (id)
 );
 
@@ -152,7 +121,6 @@ create table yk_wallet
    yk_transType         char(5),
    primary key (id)
 );
-
 
 
 /*==============================================================*/

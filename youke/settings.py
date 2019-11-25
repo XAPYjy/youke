@@ -24,12 +24,7 @@ SECRET_KEY = '-16x(5!j67@oc3efi@q*3h*xe2qqt8tc0n(g*y_h(qi2_e#l*r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-<<<<<<< HEAD
-
 ALLOWED_HOSTS = ['*']
-=======
-ALLOWED_HOSTS = ["*"]
->>>>>>> my
 
 # Application definition
 
@@ -82,16 +77,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'youke',
-<<<<<<< HEAD
-        # 'HOST': 'localhost',
-        # 'NAME': 'mysql',
-        # 'HOST': '47.92.132.161',
-        #'NAME': 'mysql',
-        'HOST': '47.92.132.161',
-=======
         'HOST': '47.92.132.161',
         # 'HOST': 'localhost',
->>>>>>> my
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'root',
@@ -145,24 +132,23 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
 
-
 # 上传的文件存放位置
 MEDIA_URL = '/s/m/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
 # 配置redis缓存
 CACHES = {
-     'redis': {
+    'redis': {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://47.92.132.161:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
-    'default':{
-        'BACKEND':'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':'cache.dat',
-        'TIMEOUT':60,
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'cache.dat',
+        'TIMEOUT': 60,
         'OPTIONS': {
             'MAX_ENTRIES': 1000
         }
@@ -171,9 +157,8 @@ CACHES = {
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_COOKIE_NAME = 'session_id'
-SESSION_COOKIE_AGE = 604800    # 一周有效时长（秒）
-SESSION_CACHE_ALIAS = 'redis'  #缓存方案，默认default
-
+SESSION_COOKIE_AGE = 604800  # 一周有效时长（秒）
+SESSION_CACHE_ALIAS = 'redis'  # 缓存方案，默认default
 
 # 跨域允许的请求方式
 CORS_ALLOW_METHODS = (
@@ -209,17 +194,3 @@ REST_FRAMEWORK = {
         'tools.renderer.YKrender',
     ),
 }
-<<<<<<< HEAD
-
-=======
-# 配置redis缓存
-CACHES = {
-    'default': {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://47.92.132.161:6379/0",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
-}
->>>>>>> my

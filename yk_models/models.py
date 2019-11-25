@@ -8,30 +8,6 @@
 from django.db import models
 
 
-class Firstclass(models.Model):
-    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID')  # Field name made lowercase.
-    yk_firstclassname = models.CharField(db_column='yk_FirstClassName', max_length=20, blank=True,
-                                         null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'FirstClass'
-
-
-class Secondclass(models.Model):
-    yk_secondclassid = models.IntegerField(db_column='yk_SecondClassID')  # Field name made lowercase.
-    yk_secondclassname = models.CharField(db_column='yk_SecondClassName', max_length=20, blank=True,
-                                          null=True)  # Field name made lowercase.
-    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID', blank=True,
-                                          null=True)  # Field name made lowercase.
-    secondimage = models.CharField(max_length=256, blank=True, null=True)
-    secondurl = models.CharField(max_length=256, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'SecondClass'
-
-
 class Bags(models.Model):
     yk_goods_type = models.IntegerField()
     yk_list_id = models.IntegerField(blank=True, null=True)
@@ -56,26 +32,33 @@ class DjangoMigrations(models.Model):
         db_table = 'django_migrations'
 
 
-class Lessonlist(models.Model):
-    id = models.IntegerField(primary_key=True)
-    yk_lessonname = models.CharField(db_column='yk_LessonName', max_length=20, blank=True,
-                                     null=True)  # Field name made lowercase.
-    yk_lessonimage = models.CharField(db_column='yk_LessonImage', max_length=256, blank=True,
-                                      null=True)  # Field name made lowercase.
-    yk_lessonclassid = models.IntegerField(db_column='yk_LessonClassID', blank=True,
-                                           null=True)  # Field name made lowercase.
-    yk_priceclassid = models.IntegerField(db_column='yk_PriceClassID', blank=True,
-                                          null=True)  # Field name made lowercase.
-    yk_price = models.FloatField(db_column='yk_Price', blank=True, null=True)  # Field name made lowercase.
-    yk_jumplink = models.CharField(db_column='yk_JumpLink', max_length=256, blank=True,
-                                   null=True)  # Field name made lowercase.
-    yk_clicks = models.IntegerField(db_column='yk_Clicks', blank=True, null=True)  # Field name made lowercase.
-    yk_ageclass = models.CharField(db_column='yk_AgeClass', max_length=20, blank=True,
-                                   null=True)  # Field name made lowercase.
+class SysRole(models.Model):
+    name = models.CharField(max_length=50)
+    code = models.CharField(max_length=20)
 
     class Meta:
         managed = False
-        db_table = 'lessonlist'
+        db_table = 'sys_role'
+
+
+class SysUser(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    auth_string = models.CharField(max_length=100)
+    email = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sys_user'
+
+
+class SysUserRole(models.Model):
+    user_id = models.IntegerField(blank=True, null=True)
+    role_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sys_user_role'
 
 
 class YkBankCard(models.Model):
@@ -94,11 +77,13 @@ class YkBankCard(models.Model):
 class YkBillingDetails(models.Model):
     yk_wallet_id = models.IntegerField(blank=True, null=True)
     yk_user_id = models.IntegerField(blank=True, null=True)
-    yk_bill_time = models.CharField(max_length=30, blank=True, null=True)
+    yk_bill_time = models.CharField(max_length=20, blank=True, null=True)
     yk_amount = models.FloatField(blank=True, null=True)
     yk_integral = models.FloatField(blank=True, null=True)
-    yk_paymentype = models.CharField(max_length=10, blank=True, null=True)  # Field name made lowercase.
-    yk_transtype = models.CharField(max_length=10, blank=True, null=True)  # Field name made lowercase.
+    yk_paymentype = models.CharField(db_column='yk_paymenType', max_length=10, blank=True,
+                                     null=True)  # Field name made lowercase.
+    yk_transtype = models.CharField(db_column='yk_transType', max_length=10, blank=True,
+                                    null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -106,7 +91,6 @@ class YkBillingDetails(models.Model):
 
 
 class YkDiscuss(models.Model):
-    id = models.IntegerField(primary_key=True)
     yk_user_id = models.IntegerField()
     yk_discuss_contents = models.CharField(max_length=100)
     yk_discuss_date = models.DateTimeField()
@@ -128,6 +112,16 @@ class YkDownloadrecord(models.Model):
     class Meta:
         managed = False
         db_table = 'yk_downloadRecord'
+
+
+class YkFirstclass(models.Model):
+    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID')  # Field name made lowercase.
+    yk_firstclassname = models.CharField(db_column='yk_FirstClassName', max_length=20, blank=True,
+                                         null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'yk_firstClass'
 
 
 class YkInformation(models.Model):
@@ -170,11 +164,33 @@ class YkLesson(models.Model):
     yk_one_list_id = models.IntegerField(blank=True, null=True)
     yk_tow_list_id = models.IntegerField(blank=True, null=True)
     yk_class_size = models.CharField(max_length=20, blank=True, null=True)
-    yk_lesson_click = models.IntegerField(blank=True)
+    yk_lesson_click = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'yk_lesson'
+
+
+class YkLessonList(models.Model):
+    id = models.IntegerField(primary_key=True)
+    yk_lessonname = models.CharField(db_column='yk_LessonName', max_length=20, blank=True,
+                                     null=True)  # Field name made lowercase.
+    yk_lessonimage = models.CharField(db_column='yk_LessonImage', max_length=256, blank=True,
+                                      null=True)  # Field name made lowercase.
+    yk_lessonclassid = models.IntegerField(db_column='yk_LessonClassID', blank=True,
+                                           null=True)  # Field name made lowercase.
+    yk_priceclassid = models.IntegerField(db_column='yk_PriceClassID', blank=True,
+                                          null=True)  # Field name made lowercase.
+    yk_price = models.FloatField(db_column='yk_Price', blank=True, null=True)  # Field name made lowercase.
+    yk_jumplink = models.CharField(db_column='yk_JumpLink', max_length=256, blank=True,
+                                   null=True)  # Field name made lowercase.
+    yk_clicks = models.IntegerField(db_column='yk_Clicks', blank=True, null=True)  # Field name made lowercase.
+    yk_ageclass = models.CharField(db_column='yk_AgeClass', max_length=20, blank=True,
+                                   null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'yk_lesson_list'
 
 
 class YkMyClass(models.Model):
@@ -188,12 +204,8 @@ class YkMyClass(models.Model):
 
 class YkOrder(models.Model):
     yk_goods_id = models.IntegerField(blank=True, null=True)
-<<<<<<< HEAD
-    yk_isorderstatus = models.BooleanField(default=False)
-=======
     yk_isorderstatus = models.IntegerField(db_column='yk_isorderStatus', blank=True,
                                            null=True)  # Field name made lowercase.
->>>>>>> my
     yk_total_price = models.FloatField(blank=True, null=True)
     yk_user_id = models.IntegerField(blank=True, null=True)
 
@@ -219,84 +231,32 @@ class YkRotation(models.Model):
         db_table = 'yk_rotation'
 
 
+class YkSecondclass(models.Model):
+    yk_secondclassid = models.IntegerField(db_column='yk_SecondClassID')  # Field name made lowercase.
+    yk_secondclassname = models.CharField(db_column='yk_SecondClassName', max_length=20, blank=True,
+                                          null=True)  # Field name made lowercase.
+    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID', blank=True,
+                                          null=True)  # Field name made lowercase.
+    secondimage = models.CharField(max_length=256, blank=True, null=True)
+    secondurl = models.CharField(max_length=256, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'yk_secondClass'
+
+
 class YkUser(models.Model):
     yk_name = models.CharField(max_length=50, blank=True, null=True)
     yk_auto_string = models.CharField(max_length=100, blank=True, null=True)
     yk_emil = models.CharField(max_length=50, blank=True, null=True)
-<<<<<<< HEAD
-    yk_name = models.CharField(max_length=50,blank=True, null=True)
-    yk_auto_string = models.CharField(max_length=100,blank=True, null=True)
-    yk_emil = models.CharField(max_length=50,blank=True, null=True)
-    yk_phone = models.CharField(max_length=50,blank=True, null=True)
-    sys_auth = models.BooleanField(default=True)
-=======
     yk_phone = models.CharField(max_length=20, blank=True, null=True)
     sys_auth = models.IntegerField(blank=True, null=True)
->>>>>>> my
 
     class Meta:
         managed = False
         db_table = 'yk_user'
 
 
-<<<<<<< HEAD
-class SysRole(models.Model):
-    name = models.CharField(max_length=50)
-    code = models.CharField(max_length=20)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_role'
-
-
-class SysUser(models.Model):
-    name = models.CharField(max_length=50, blank=True, null=True)
-    auth_string = models.CharField(max_length=100)
-    email = models.CharField(max_length=50, blank=True, null=True)
-    phone = models.CharField(max_length=50, blank=True, null=True)
-
-    def __str__(self):
-        return "%s %s %s %s" % (self.name, self.auth_string, self.email, self.phone)
-
-    @property
-    def role(self):
-        role_id = SysUserRole.objects.get(user_id=self.id).role_id
-        return SysRole.objects.get(pk=role_id)
-
-
-    class Meta:
-        managed = False
-        db_table = 'sys_user'
-
-
-class SysUserRole(models.Model):
-    user_id = models.IntegerField(blank=True, null=True)
-    role_id = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'sys_user_role'
-
-
-
-class YkDiscuss(models.Model):
-    id = models.IntegerField(primary_key=True)
-    yk_user_id = models.IntegerField()
-    yk_discuss_contents = models.CharField(max_length=100)
-    yk_discuss_date = models.DateTimeField()
-    yk_discuss_outdate = models.DateTimeField()
-    yk_discuss_click_num = models.IntegerField(blank=True, null=True)
-    yk_lesson_id = models.IntegerField()
-
-    class Meta:
-        managed = False
-        db_table = 'yk_discuss'
-
-
-
-
-=======
->>>>>>> my
 class YkViedo(models.Model):
     id = models.IntegerField(primary_key=True)
     yk_video_name = models.CharField(max_length=50, blank=True, null=True)
@@ -310,42 +270,6 @@ class YkViedo(models.Model):
         managed = False
         db_table = 'yk_viedo'
 
-<<<<<<< HEAD
-class Firstclass(models.Model):
-    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID')  # Field name made lowercase.
-    yk_firstclassname = models.CharField(db_column='yk_FirstClassName', max_length=20, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'FirstClass'
-
-
-class Secondclass(models.Model):
-    yk_secondclassid = models.IntegerField(db_column='yk_SecondClassID')  # Field name made lowercase.
-    yk_secondclassname = models.CharField(db_column='yk_SecondClassName', max_length=20, blank=True, null=True)  # Field name made lowercase.
-    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID', blank=True, null=True)  # Field name made lowercase.
-    secondimage = models.CharField(max_length=256, blank=True, null=True)
-    secondurl = models.CharField(max_length=256, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'SecondClass'
-
-
-class YkRotation(models.Model):
-    yk_is_rotation = models.IntegerField()
-
-    class Meta:
-        db_table = 'yk_rotation'
-
-
-class YkRecommend(models.Model):
-    yk_lesson_type = models.CharField(max_length=200)
-    yk_lesson_jump_link = models.CharField(max_length=200)
-
-    class Meta:
-        db_table = 'yk_recommend'
-=======
 
 class YkWallet(models.Model):
     yk_balance = models.CharField(max_length=50, blank=True, null=True)
@@ -363,6 +287,3 @@ class YkWallet(models.Model):
     class Meta:
         managed = False
         db_table = 'yk_wallet'
-
-
->>>>>>> my

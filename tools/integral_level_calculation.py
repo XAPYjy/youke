@@ -8,25 +8,25 @@ def compute(money, integral):
     part = money * 0.1
     integral += part
     member = "柚籽"
-    discount = "九九折"
+    discount = "0.99"
     if integral <= 200:
         member = "柚籽"
-        discount = "九九折"
+        discount = "0.99"
     elif integral <= 500:
         member = "柚苗"
-        discount = "九六折"
+        discount = "0.96"
     elif integral <= 1000:
         member = "柚树"
-        discount = "九折"
+        discount = "0.9"
     elif integral <= 1500:
         member = "青柚"
-        discount = "八八折"
+        discount = "0.88"
     elif integral <= 2000:
         member = "红柚"
-        discount = "八五折"
+        discount = "0.85"
     elif integral <= 5000:
         member = "金苗"
-        discount = "八折"
+        discount = "0.8"
     item_dict = {
         "money": money,
         "member": member,
