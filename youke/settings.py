@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'middleware.valid_login',
+    'back_system.middleware.valid_login',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -78,9 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'youke',
-        'HOST': '47.92.132.161',
         # 'HOST': 'localhost',
-        'NAME': 'mysql',
+        #'NAME': 'mysql',
         'HOST': '47.92.132.161',
         'PORT': 3306,
         'USER': 'root',
@@ -194,15 +193,5 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'util.renderer.YKrender',
     ),
-}
-# 配置redis缓存
-CACHES = {
-     'default': {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://47.92.132.161:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
 }
 

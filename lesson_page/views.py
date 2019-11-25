@@ -48,6 +48,7 @@ def detail_view(request):
             rec_lesson['lessonPrice'] = recommendLessons[i][3]
             rec_lesson['buyAmount'] = recommendLessons[i][4]
             rec_lesson['priceType'] = recommendLessons[i][5]
+            rec_lesson['teacherDescribe'] = recommendLessons[i][6]
             rel = copy.deepcopy(rec_lesson)
             recommendData.append(rel)
         if user_id:
@@ -63,6 +64,7 @@ def detail_view(request):
                 likelesson['lessonPrice'] = likeLessons[i][3]
                 likelesson['buyAmount'] = likeLessons[i][4]
                 likelesson['priceType'] = likeLessons[i][5]
+                likelesson['teacherDescribe'] = likeLessons[i][6]
                 like = copy.deepcopy(likelesson)
                 likeData.append(like)
         result = {
