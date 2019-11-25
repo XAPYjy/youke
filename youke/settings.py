@@ -24,6 +24,7 @@ SECRET_KEY = '-16x(5!j67@oc3efi@q*3h*xe2qqt8tc0n(g*y_h(qi2_e#l*r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -33,6 +34,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'home_page',
+    'rest_framework',
+    'lesson_page',
     'back_system',
     'yk_models',
     'ykuser',
@@ -73,6 +77,9 @@ WSGI_APPLICATION = 'youke.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'youke',
+        'HOST': '47.92.132.161',
+        # 'HOST': 'localhost',
         'NAME': 'mysql',
         'HOST': '47.92.132.161',
         'PORT': 3306,
@@ -113,6 +120,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+STATIC_URL = '/s/'
 
 # 静态资源文件
 STATIC_URL = '/s/'
@@ -184,5 +195,14 @@ REST_FRAMEWORK = {
         'util.renderer.YKrender',
     ),
 }
-
+# 配置redis缓存
+CACHES = {
+     'default': {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://47.92.132.161:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
 
