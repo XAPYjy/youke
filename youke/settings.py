@@ -45,7 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'middleware.valid_login',
+    'back_system.middleware.valid_login',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -78,10 +78,11 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'youke',
-        'HOST': '47.92.132.161',
         # 'HOST': 'localhost',
         # 'NAME': 'mysql',
         # 'HOST': '47.92.132.161',
+        #'NAME': 'mysql',
+        'HOST': '47.92.132.161',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'root',

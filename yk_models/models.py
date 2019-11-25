@@ -87,6 +87,7 @@ class YkLesson(models.Model):
     yk_one_list_id = models.IntegerField(blank=True, null=True)
     yk_tow_list_id = models.IntegerField(blank=True, null=True)
     yk_class_size = models.CharField(max_length=20, blank=True, null=True)
+    yk_lesson_click = models.IntegerField(blank=True)
 
     class Meta:
         managed = False
@@ -105,6 +106,9 @@ class YkOrder(models.Model):
 
 
 class YkUser(models.Model):
+    yk_name = models.CharField(max_length=50, blank=True, null=True)
+    yk_auto_string = models.CharField(max_length=100, blank=True, null=True)
+    yk_emil = models.CharField(max_length=50, blank=True, null=True)
     yk_name = models.CharField(max_length=50,blank=True, null=True)
     yk_auto_string = models.CharField(max_length=100,blank=True, null=True)
     yk_emil = models.CharField(max_length=50,blank=True, null=True)
@@ -152,3 +156,69 @@ class SysUserRole(models.Model):
     class Meta:
         managed = False
         db_table = 'sys_user_role'
+
+
+
+class YkDiscuss(models.Model):
+    id = models.IntegerField(primary_key=True)
+    yk_user_id = models.IntegerField()
+    yk_discuss_contents = models.CharField(max_length=100)
+    yk_discuss_date = models.DateTimeField()
+    yk_discuss_outdate = models.DateTimeField()
+    yk_discuss_click_num = models.IntegerField(blank=True, null=True)
+    yk_lesson_id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'yk_discuss'
+
+
+
+
+class YkViedo(models.Model):
+    id = models.IntegerField(primary_key=True)
+    yk_video_name = models.CharField(max_length=50, blank=True, null=True)
+    yk_lesson_id = models.IntegerField()
+    yk_video_progress = models.FloatField(blank=True, null=True)
+    yk_user_id = models.IntegerField()
+    yk_crats_id = models.IntegerField(blank=True, null=True)
+    yk_lesson_jump_link = models.CharField(max_length=200)
+
+    class Meta:
+        managed = False
+        db_table = 'yk_viedo'
+
+class Firstclass(models.Model):
+    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID')  # Field name made lowercase.
+    yk_firstclassname = models.CharField(db_column='yk_FirstClassName', max_length=20, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'FirstClass'
+
+
+class Secondclass(models.Model):
+    yk_secondclassid = models.IntegerField(db_column='yk_SecondClassID')  # Field name made lowercase.
+    yk_secondclassname = models.CharField(db_column='yk_SecondClassName', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    yk_firstclassid = models.IntegerField(db_column='yk_FirstClassID', blank=True, null=True)  # Field name made lowercase.
+    secondimage = models.CharField(max_length=256, blank=True, null=True)
+    secondurl = models.CharField(max_length=256, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'SecondClass'
+
+
+class YkRotation(models.Model):
+    yk_is_rotation = models.IntegerField()
+
+    class Meta:
+        db_table = 'yk_rotation'
+
+
+class YkRecommend(models.Model):
+    yk_lesson_type = models.CharField(max_length=200)
+    yk_lesson_jump_link = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = 'yk_recommend'
