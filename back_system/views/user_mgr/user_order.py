@@ -3,22 +3,22 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from back_system.common import make_pwd
-from back_system.models import *
+from yk_models.models import *
 
 
 class UserOrderView(View):
     def get(self, request):
         if request.GET.get('id',''):
-            suser = U.objects.get(pk=request.GET.get('id'))
+            order = YkOrder.objects.get(pk=request.GET.get('id'))
             return  JsonResponse({
-                'id':suser.id,
-                'name':suser.name,
-                'auth_string':suser.auth_string,
-                'email':suser.email,
-                'phone':suser.phone
+                'id':order.id,
+                'yk_goods_id':order.yk_goods_id,
+                'yk_isorderstatus':order.yk_isorderstatus,
+                'yk_total_price':order.yk_total_price,
+                'yk_user_id':order.yk_user_id,
             })
-        susers = SysUser.objects.all()
-        return render(request, 'user_mgr/user.html', locals())
+        orders = YkOrder.objects.all()
+        return render(request, 'user_mgr/order.html', locals())
 
     def post(self, request:HttpResponse):
         id = request.POST.get("suser_id",None)

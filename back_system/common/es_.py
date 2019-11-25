@@ -27,6 +27,7 @@ def remove_index():
     ret = resp.json()
     print(ret)
 
+
 def add_doc(doc:dict,doc_type:str):
     # dict 对象中不存在id的key时会抛出异常吗？ 会
     doc_id = doc.pop('id') if 'id' in doc.keys() else None

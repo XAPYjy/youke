@@ -12,7 +12,9 @@ def home_view(request):
     recommendList = {}  # 单门推荐课程的属性集合
     more = []
     rotaions = YkRotation.objects.values_list("id")
+    print('rotaions',rotaions)
     recommends = YkRecommend.objects.values_list("id",'yk_lesson_type')  # 获取推荐课程分类和id
+    print('recommends=',recommends)
     lesson = YkLesson.objects.all()
     for i in range(0,len(rotaions)-1):  # 生成轮播数据
         s = YkLesson.objects.filter(yk_rotaion_id=rotaions[i][0]).values('id','yk_lesson_img')

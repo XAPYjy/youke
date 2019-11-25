@@ -2,7 +2,7 @@
 /* DBMS name:      MySQL 5.0                                    */
 /* Created on:     2019/11/25 9:11:26                           */
 /*==============================================================*/
-use youke;
+
 
 drop table if exists FirstClass;
 
