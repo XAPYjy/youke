@@ -3,9 +3,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from back_system.common import make_pwd, es_
-from back_system.models import SysUser
+from back_system.models import *
 from django.db import connection
-from back_system.common.es_ import *
 
 
 def index_view(request: HttpRequest):

@@ -4,7 +4,7 @@
         <div class="panel panel-default menu-first menu-first-active">
             <a data-toggle="collapse" data-parent="#accordion" href="index.html" aria-expanded="true"
                aria-controls="collapseOne">
-                <i class="icon-home icon-large"></i> 主页
+                <a href=" {% url 'bk:in' %}"><i class="icon-home icon-large"></i> 主页</a>
             </a>
         </div>
         {% if request.session.login_user.role_code == 'admin' %}

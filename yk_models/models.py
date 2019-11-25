@@ -95,7 +95,7 @@ class YkLesson(models.Model):
 
 class YkOrder(models.Model):
     yk_goods_id = models.IntegerField(blank=True, null=True)
-    yk_isorderstatus = models.IntegerField(db_column='yk_isorderStatus', blank=True, null=True)  # Field name made lowercase.
+    yk_isorderstatus = models.BooleanField(default=False)
     yk_total_price = models.FloatField(blank=True, null=True)
     yk_user_id = models.IntegerField(blank=True, null=True)
 
@@ -105,12 +105,50 @@ class YkOrder(models.Model):
 
 
 class YkUser(models.Model):
-    yk_name = models.CharField(max_length=50, blank=True, null=True)
-    yk_auto_string = models.CharField(max_length=100, blank=True, null=True)
-    yk_emil = models.CharField(max_length=50, blank=True, null=True)
-    yk_phone = models.IntegerField(blank=True, null=True)
-    sys_auth = models.IntegerField(blank=True, null=True)
+    yk_name = models.CharField(max_length=50,blank=True, null=True)
+    yk_auto_string = models.CharField(max_length=100,blank=True, null=True)
+    yk_emil = models.CharField(max_length=50,blank=True, null=True)
+    yk_phone = models.CharField(max_length=50,blank=True, null=True)
+    sys_auth = models.BooleanField(default=True)
 
     class Meta:
         managed = False
         db_table = 'yk_user'
+
+
+class SysRole(models.Model):
+    name = models.CharField(max_length=50)
+    code = models.CharField(max_length=20)
+
+    class Meta:
+        managed = False
+        db_table = 'sys_role'
+
+
+class SysUser(models.Model):
+    name = models.CharField(max_length=50, blank=True, null=True)
+    auth_string = models.CharField(max_length=100)
+    email = models.CharField(max_length=50, blank=True, null=True)
+    phone = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return "%s %s %s %s" % (self.name, self.auth_string, self.email, self.phone)
+
+    @property
+    def role(self):
+        role_id = SysUserRole.objects.get(user_id=self.id).role_id
+        return SysRole.objects.get(pk=role_id)
+
+
+    class Meta:
+        managed = False
+        db_table = 'sys_user'
+
+
+class SysUserRole(models.Model):
+    user_id = models.IntegerField(blank=True, null=True)
+    role_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'sys_user_role'
