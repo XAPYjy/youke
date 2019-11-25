@@ -1,0 +1,189 @@
+{% extends 'basic/base.html' %}
+
+{% block content_nav_home %}用户管理{% endblock %}
+
+{% block nav_path %}
+    <li><span>普通用户</span></li>
+{% endblock %}
+
+{% block content %}
+    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#add1" style="margin: 5px 0">添加</a>
+    <table class="table table-bordered table-striped text-center bg-info">
+        <thead>
+        <tr class="info">
+            <th class="text-center">id</th>
+            <th class="text-center">name</th>
+            <th class="text-center">auto_string</th>
+            <th class="text-center">email</th>
+            <th class="text-center">phone</th>
+            <th class="text-center">sys_auth</th>
+            <th class="text-center" width="200px">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for uuser in uusers %}
+            <tr>
+                <td>{{ uuser.id }}</td>
+                <td>{{ uuser.yk_name }}</td>
+                <td>{{ uuser.yk_auto_string }}</td>
+                <td>{{ uuser.yk_emil }}</td>
+                <td>{{ uuser.yk_phone }}</td>
+                <td>{{ uuser.sys_auth }}</td>
+                <td>
+                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
+                       onclick="edit({{ uuser.id }}, '{{ uuser.yk_name }}','{{ uuser.yk_auto_string }}','{{ uuser.yk_emil }}','{{ uuser.yk_phone }}','{{ uuser.sys_auth }}')">编辑</a>
+                    <a onclick="delete_uuser({{ uuser.id }}, '{{ uuser.yk_name }}','{{ uuser.yk_auto_string }}','{{ uuser.yk_emil }}','{{ uuser.yk_phone }}','{{ uuser.sys_auth }}')" class="btn btn-danger btn-sm">删除</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <!--添加-->
+    <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="add11">添加</h4>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <ul>
+                            <li>
+                                <label><span>用户名 ：</span></label>
+                                <input type="text" name="name"/>
+                            </li>
+                            <li>
+                                <label><span>安全口令：</span></label>
+                                <input type="password" name="password"/>
+                            </li>
+                            <li>
+                                <label><span>邮箱 ：</span></label>
+                                <input type="email" name="email"/>
+                            </li>
+                            <li>
+                                <label><span>电话 ：</span></label>
+                                <input type="text" name="phone"/>
+                            </li>
+                            <li>
+                                <label><span>权限 ：</span></label>
+                                <input type="text" name="auth"/>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
+                        <button class="btn btn-primary btn-sm">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 编辑 -->
+    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="add11">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="add11">编辑</h4>
+                </div>
+                <form method="post">
+                    <div class="modal-body">
+                        <ul>
+                            <li>
+                                <label><span>用户ID ：</span></label>
+                                <input id="edit_id" type="text" name="uuser_id" />
+                            </li>
+                            <li>
+                                <label><span>用户名 ：</span></label>
+                                <input id="edit_name" type="text" name="name"/>
+                            </li>
+                            <li>
+                                <label><span>用户口令 ：</span></label>
+                                <input id="edit_pwd" type="password" name="password"  />
+                            </li>
+                            <li>
+                                <label><span>用户邮箱 ：</span></label>
+                                <input id="edit_email" type="email" name="email"/>
+                            </li>
+                            <li>
+                                <label><span>用户电话 ：</span></label>
+                                <input id="edit_phone" type="text" name="phone"/>
+                            </li>
+                            <li>
+                                <label><span>用户权限 ：</span></label>
+                                <input id="edit_auth" type="text" name="auth"/>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
+                        <button class="btn btn-primary btn-sm">保存</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提示 -->
+    <div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="add11">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="add11">提示信息</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <h4 id="msg"></h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
+                    <button onclick="delete_ajax()" class="btn btn-warning btn-sm">确定</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function edit(id, yk_name,yk_auto_string,yk_emil,yk_phone,sys_auth) {
+            $('#edit_id').val(id);
+            $('#edit_name').val(yk_name);
+            $('#edit_pwd').val(yk_auto_string);
+            $('#edit_email').val(yk_emil);
+            $('#edit_phone').val(yk_phone);
+            $('#edit_auth').val(sys_auth);
+            $('#edit').modal('show');
+        }
+
+        var uuser_id = 0;
+        function delete_uuser(uuserid, uuser_name) {
+            uuser_id = uuserid;
+            $('#msg').html('是否删除 '+ uuser_name+" ?");
+            $('#info').modal('toggle');
+        }
+
+        function delete_ajax() {
+            url = window.location.href + "?id=" + uuser_id;
+            fetch(url, {
+                method: 'DELETE'
+            }).then(resp => resp.json()).then(data => {
+                alert(data.msg);
+                if (data.status == 0) {
+                    // 刷新当前页面
+                    open(window.location.href, target = '_self');
+                }
+            })
+        }
+    </script>
+{% endblock %}
+
