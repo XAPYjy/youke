@@ -19,6 +19,6 @@ from django.urls import path, include
 from ykuser.urls import router_user
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('gate/',include('class_ls.urls')),
     path('youke/', include(router_user.urls))
 ]

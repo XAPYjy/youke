@@ -24,7 +24,7 @@ SECRET_KEY = '+=bc6s(@hgjdfc7fr5yvr)9cx4n%siasvy@o7h^9@1057)yb71'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'yk_models',
     'ykuser',
+    'class_ls'
 ]
 
 MIDDLEWARE = [
@@ -68,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'youke.wsgi.application'
+# WSGI_APPLICATION = 'youke.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
@@ -77,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'youke',
-        # 'HOST': '47.92.132.161',
-        'HOST': 'localhost',
+        'HOST': '47.92.132.161',
+        # 'HOST': 'localhost',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'root',
@@ -167,3 +168,5 @@ CACHES = {
     }
 }
 
+HOST = 'localhost'
+PORT = 8000
