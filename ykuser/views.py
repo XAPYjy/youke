@@ -1,4 +1,3 @@
-import socket
 import time
 
 from rest_framework import viewsets, mixins
@@ -261,8 +260,12 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
                 "msg": e.detail
             }
             return Response(result)
-        # upload_file = request.FILES.get("head")  # 接收上传文件对象,头像图片
-        # head_url = file_upload(upload_file)  # 图片地址
+        upload_file = request.FILES.get("head")[0]  # 接收上传文件对象,头像图片
+        head_url = file_upload(upload_file)  # 图片地址
+        if head_url:
+            head_url = head_url
+        else:
+            head_url = "图片格式错误！"
         nikname = ser.data["nikname"]  # 从序列化对象中获取昵称
         name = ser.data["name"]  # 真实姓名
         sex = ser.data["sex"]  # 性别
@@ -273,7 +276,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         signature = ser.data["signature"]  # 个性签名
 
         try:
-            InFor().save_infor(user_id=int(user_id), nikname=nikname, name=name, head=None,
+            InFor().save_infor(user_id=int(user_id), nikname=nikname, name=name, head=head_url,
                                sex=sex, age=age, career=career, hobby=hobby,
                                idnumber=idnumber, signature=signature)
         except Exception as e:
@@ -290,7 +293,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             "data": {
                 "nikname": nikname,  # 昵称
                 "name": name,  # 真实姓名
-                # "head": head_url,  # 头像
+                "head": head_url,  # 头像
                 "sex": sex,  # 性别
                 "age": age,  # 年龄
                 "career": career,  # 职业
@@ -584,14 +587,13 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     # 测试文件上传
     @action(methods=["post"], detail=False)
     def file(self, request):
-        hostname = socket.gethostname()
-        print("hostname,,,,,,,,,,,,,,,,,,,,,",hostname)
         if request.FILES:
-            up_file = request.FILES.getlist('up_file')  # 拿到上传文件
-            if not up_file:
+            image = request.FILES.getlist('up_file')[0]  # 拿到上传文件
+            if not image:
                 return Response({"msg":"接受文件为空"})
-            print(up_file,"=====================")
-            for f in up_file:
-                print(f)
-            file_upload(up_file)
+            print(image,"=====================")
+            print(image.file)
+            print(image.name)
+            print(image.content_type)
+            file_upload(image)
             return Response({"msg":"接受文件成功"})
