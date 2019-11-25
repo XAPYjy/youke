@@ -80,8 +80,8 @@ DATABASES = {
         'NAME': 'youke',
         'HOST': '47.92.132.161',
         # 'HOST': 'localhost',
-        'NAME': 'mysql',
-        'HOST': '47.92.132.161',
+        # 'NAME': 'mysql',
+        # 'HOST': '47.92.132.161',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'root',
@@ -194,15 +194,5 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'util.renderer.YKrender',
     ),
-}
-# 配置redis缓存
-CACHES = {
-     'default': {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://47.92.132.161:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
 }
 

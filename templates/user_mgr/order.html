@@ -129,23 +129,23 @@
 
 {% block js %}
     <script>
-        function edit(id, name, code) {
-            $('#edit_id').val(id);
-            $('#edit_name').val(name);
-            $('#edit_code').val(code);
+        {#function edit(id, name, code) {#}
+        {#    $('#edit_id').val(id);#}
+        {#    $('#edit_name').val(name);#}
+        {#    $('#edit_code').val(code);#}
+        {##}
+        {#    $('#edit').modal('show');#}
+        {#\}#}
 
-            $('#edit').modal('show');
-        }
-
-        var role_id = 0;
-        function delete_role(roleid, role_name) {
-            role_id = roleid;
-            $('#msg').html('是否删除 '+ role_name+" ?");
+        var order_id = 0;
+        function delete_order(orderid, role_name) {
+            order_id = orderid;
+            $('#msg').html('是否删除 该订单？');
             $('#info').modal('toggle');
         }
 
         function delete_ajax() {
-            url = window.location.href + "?id=" + role_id;
+            url = window.location.href + "?id=" + order_id;
             fetch(url, {
                 method: 'DELETE'
             }).then(resp => resp.json()).then(data => {
