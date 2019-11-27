@@ -24,7 +24,7 @@
             <tr>
                 <td>{{ suser.id }}</td>
                 <td>{{ suser.name }}</td>
-                <td>{{ suser.auth_string }}</td>
+                <td>{{ suser.auth_string|star_ellipse:'15' }}</td>
                 <td>{{ suser.email }}</td>
                 <td>{{ suser.phone }}</td>
                 <td>

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{% block title %}主页{% endblock %}-柚课后台管理系统</title>
+    <title>{% block title %}主页{% endblock %}--柚课后台管理系统</title>
 
     {% include 'basic/css.html' %}
 
@@ -24,7 +24,7 @@
 
             {% include 'basic/menu.html' %}
 
-            <div class="col-xs-10">
+            <div class="col-xs-10" style="overflow: auto">
                 <br/>
                     <ol class="breadcrumb">
                         <li class="active"><span class="glyphicon glyphicon-home"></span>{% block content_nav_home %}&nbsp;后台首页{% endblock %}</li>
@@ -34,7 +34,9 @@
                     </ol>
 
                 {% block content %}
-                    <h1 class="text-center text-yellowgreen">柚课后台管理系统</h1>
+                    <br/><br/>
+                    <img src="/s/img/logo.png" style="margin-left: 25%">
+                    <h1 class="text-center text-black">柚课后台管理系统</h1>
                 {% endblock %}
             </div>
         </div>
