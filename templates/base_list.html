@@ -1,9 +1,9 @@
 {% extends 'basic/base.html' %}
 
-{% block content_nav_home %}系统管理{% endblock %}
+{% block content_nav_home %}{{ menu1_name }}{% endblock %}
 
 {% block nav_path %}
-    <li><span>系统用户</span></li>
+    <li><span>{{ menu2_name }}</span></li>
 {% endblock %}
 
 {% block content %}
@@ -11,26 +11,23 @@
     <table class="table table-bordered table-striped text-center bg-info">
         <thead>
         <tr class="info">
-            <th class="text-center">id</th>
-            <th class="text-center">name</th>
-            <th class="text-center">auth_string</th>
-            <th class="text-center">email</th>
-            <th class="text-center">phone</th>
+            {% for field in fields %}
+                <th class="text-center">{{ field.verbose_name }}</th>
+            {% endfor %}
+
             <th class="text-center" width="200px">操作</th>
         </tr>
         </thead>
         <tbody>
-        {% for suser in susers %}
+        {% for data in datas %}
             <tr>
-                <td>{{ suser.id }}</td>
-                <td>{{ suser.name }}</td>
-                <td>{{ suser.auth_string }}</td>
-                <td>{{ suser.email }}</td>
-                <td>{{ suser.phone }}</td>
+                 {% for field in fields %}
+                    <td class="text-center">{{ data|get_attr:field.attname|star_ellipse:'15' }}</td>
+                 {% endfor %}
                 <td>
                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
-                       onclick="edit({{ suser.id }}, '{{ suser.name }}','{{ suser.auth_string }}','{{ suser.email }}','{{ suser.phone }}')">编辑</a>
-                    <a onclick="delete_suser({{ suser.id }}, '{{ suser.name }}','{{ suser.auth_string }}','{{ suser.email }}','{{ suser.phone }}')" class="btn btn-danger btn-sm">删除</a>
+                       onclick="edit({{ data.id }})">编辑</a>
+                    <a onclick="delete_uuser({{ uuser.id }}, '{{ uuser.yk_name }}','{{ uuser.yk_auto_string }}','{{ uuser.yk_emil }}','{{ uuser.yk_phone }}','{{ uuser.sys_auth }}')" class="btn btn-danger btn-sm">删除</a>
                 </td>
             </tr>
         {% endfor %}
@@ -65,6 +62,10 @@
                                 <label><span>电话 ：</span></label>
                                 <input type="text" name="phone"/>
                             </li>
+                            <li>
+                                <label><span>权限 ：</span></label>
+                                <input type="text" name="auth"/>
+                            </li>
                         </ul>
                     </div>
                     <div class="modal-footer">
@@ -90,7 +91,7 @@
                         <ul>
                             <li>
                                 <label><span>用户ID ：</span></label>
-                                <input id="edit_id" type="text" name="suser_id" />
+                                <input id="edit_id" type="text" name="uuser_id" />
                             </li>
                             <li>
                                 <label><span>用户名 ：</span></label>
@@ -105,8 +106,12 @@
                                 <input id="edit_email" type="email" name="email"/>
                             </li>
                             <li>
-                                <label><span>系统用户电话 ：</span></label>
+                                <label><span>用户电话 ：</span></label>
                                 <input id="edit_phone" type="text" name="phone"/>
+                            </li>
+                            <li>
+                                <label><span>用户权限 ：</span></label>
+                                <input id="edit_auth" type="text" name="auth"/>
                             </li>
                         </ul>
                     </div>
@@ -145,24 +150,25 @@
 
 {% block js %}
     <script>
-        function edit(id, name,auth_string,email,phone) {
+        function edit(id, yk_name,yk_auto_string,yk_emil,yk_phone,sys_auth) {
             $('#edit_id').val(id);
-            $('#edit_name').val(name);
-            $('#edit_pwd').val(auth_string);
-            $('#edit_email').val(email);
-            $('#edit_phone').val(phone);
+            $('#edit_name').val(yk_name);
+            $('#edit_pwd').val(yk_auto_string);
+            $('#edit_email').val(yk_emil);
+            $('#edit_phone').val(yk_phone);
+            $('#edit_auth').val(sys_auth);
             $('#edit').modal('show');
         }
 
-        var suser_id = 0;
-        function delete_suser(suserid, suser_name) {
-            suser_id = suserid;
-            $('#msg').html('是否删除 '+ suser_name+" ?");
+        var uuser_id = 0;
+        function delete_uuser(uuserid, uuser_name) {
+            uuser_id = uuserid;
+            $('#msg').html('是否删除 '+ uuser_name+" ?");
             $('#info').modal('toggle');
         }
 
         function delete_ajax() {
-            url = window.location.href + "?id=" + suser_id;
+            url = window.location.href + "?id=" + uuser_id;
             fetch(url, {
                 method: 'DELETE'
             }).then(resp => resp.json()).then(data => {

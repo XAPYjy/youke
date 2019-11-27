@@ -6,10 +6,10 @@ from back_system.views.user_mgr.user_user import UserUserView
 from back_system.views.lesson_mgr.lesson_message import LessonMessageView
 from back_system.views.lesson_mgr.lesson_firstlist import LessonFirstView
 from back_system.views.lesson_mgr.lesson_secondlist import LessonSecondView
-from back_system.views.lesson_mgr.lesson_list import LessonListView
 from back_system.views.total_mgr.total_lesson import TotalLessonView
 from back_system.views.total_mgr.total_order import TotalOrderView
 from back_system.views.total_mgr.total_user import TotalUserView
+from back_system.views.view import BaseView
 
 from back_system.views.views import *
 
@@ -26,10 +26,10 @@ urlpatterns = [
     path('lfirst/',LessonFirstView.as_view(),),
     path('lsecond/',LessonSecondView.as_view(),),
     path('lmessage/',LessonMessageView.as_view(),),
-    path('llist/',LessonListView.as_view(),),
     path('tlesson/', TotalLessonView.as_view(), ),
     path('torder/',TotalOrderView.as_view(), ),
     path('tuser/',TotalUserView.as_view(), ),
     path('init_es/', ESView.as_view()),
-    path('upload_log/', ESLogView.as_view),
+    path('upload_log/', ESLogView.as_view()),
+    path('base/',BaseView.as_view()),
 ]

@@ -1,9 +1,9 @@
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
-
-from back_system.common import make_pwd, es_
 from back_system.models import *
+from back_system.common import make_pwd, es_
+
 from django.db import connection
 
 
@@ -20,9 +20,9 @@ def login_view(request: HttpRequest):
         if any((not logname,not logpwd,len(logname) == 0,len(logpwd) == 0)):
             error = '用户名或密码不能为空！'
         else:
-            ret = SysUser.objects.filter(name=logname,auth_string=make_pwd(logpwd))
+            ret = SysUser.objects.filter(name=logname, auth_string=make_pwd(logpwd))
             print(ret)
-            if ret.exists():
+            if ret:
                 login_user = ret.first()
 
                 # 将登录的用户信息存到session中
@@ -32,18 +32,18 @@ def login_view(request: HttpRequest):
                     'role_name':login_user.role.name,
                     'role_code':login_user.role.code
                 }
-                return redirect('/')
+                return redirect('/back/')
             error = '用户名或密码错误！'
-    return render(request,'login.html',locals())
+    return render(request, 'login.html', locals())
 
 
-def register_view(request: HttpRequest):
-    return render(request, 'register.html')
+# def register_view(request: HttpRequest):
+#     return render(request, 'register.html')
 
 
 def logout_view(request: HttpRequest):
     request.session.pop('login_user')
-    return redirect('/login/')
+    return redirect('/back/login/')
 
 
 class ESView(View):
