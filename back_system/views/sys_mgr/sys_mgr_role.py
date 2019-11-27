@@ -30,7 +30,7 @@ class SRoleView(View):
         else:
             role = SysRole.objects.create(name=name,code=code)
 
-        return redirect('/role/')
+        return redirect('/back/role/')
 
     def delete(self, request):
         role_id = request.GET.get('id')
