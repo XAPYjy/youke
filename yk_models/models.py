@@ -8,15 +8,17 @@
 from django.db import models
 
 
+# 柚子树
 class Bags(models.Model):
-    yk_goods_type = models.IntegerField()
-    yk_list_id = models.IntegerField(blank=True, null=True)
-    yk_lesson_id = models.IntegerField()
-    yk_price = models.FloatField()
-    yk_authority = models.IntegerField()
-    yk_user_id = models.IntegerField()
-    yk_time = models.TimeField()
-
+    yk_goods_type = models.BooleanField()   # 购物车状态(已购,未购)
+    yk_list_id = models.IntegerField(blank=True, null=True) # 课程列表id
+    yk_lesson_id = models.IntegerField()    #   课程详情id
+    yk_user_id = models.IntegerField()      # 用户id
+    yk_price = models.FloatField()          # 价格
+    # yk_num = models.IntegerField()          # 单个商品的购买数量
+    yk_time = models.TimeField()            # 购买时间
+    # yk_is_selected = models.BooleanField(default=True)  # 购物车记录的选中状态
+    yk_video_progress = models.FloatField()
     class Meta:
         managed = False
         db_table = 'bags'

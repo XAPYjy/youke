@@ -33,12 +33,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.auth',
     'home_page',
     'rest_framework',
     'lesson_page',
     'back_system',
     'yk_models',
     'ykuser',
+    'cart',
 ]
 
 MIDDLEWARE = [
