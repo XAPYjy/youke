@@ -1,7 +1,10 @@
 import copy
 
 from django.http import JsonResponse
+from requests import Response
+
 from lesson_page.models import *
+from util.cache_ import valid_token
 
 
 def detail_view(request):
@@ -13,14 +16,12 @@ def detail_view(request):
         likelesson = {}
         user_id = request.GET.get("uid")
         lesson_id = request.GET.get('lessonId')
-        print(lesson_id)
         # 获取上一个页面返回的课程id的课程详情
-        lesson = YkLesson.objects.filter(id=lesson_id).values_list('yk_video_jump_link','yk_lesson_name','yk_lesson_price','yk_class_size','yk_course_chapter','yk_teacher_describe','yk_lesson_click','yk_watch_amount','yk_buy_amount')
+        lesson = YkLesson.objects.filter(id=lesson_id).values_list('yk_video_jump_link','yk_lesson_name','yk_lesson_price','yk_class_size','yk_course_chapter','yk_teacher_describe','yk_lesson_click','yk_watch_amount','yk_buy_amount','yk_lesson_describe')
         #获取这个课程的目录下的课程数量
         lessonContentsNum = YkLesson.objects.filter(id=lesson_id).values('yk_lesson_contents_mark').count()
         #查询当前课程的二级分类
         two_list_id = YkLesson.objects.filter(id=lesson_id).values_list('yk_tow_list_id')[0][0]
-        print('two_list_id=',two_list_id)
         # 'yk_video_jump_link'视频, 'yk_lesson_name', 'yk_lesson_price'价格,
         # 'yk_class_size'视屏大小, 'yk_course_chapter'章节,
         # 'yk_teacher_describe', 'yk_lesson_click'点击率,'yk_watch_amount'观看数目,'yk_buy_amount'已购买
@@ -36,11 +37,12 @@ def detail_view(request):
         lessonData['lessonClick'] = lesson[0][6]
         lessonData['watchAmount'] = lesson[0][7]
         lessonData['buyAmount'] = lesson[0][8]
+        lessonData['lessonDescribe'] = lesson[0][9]
         # 封装推荐课程
         recommendLessons = YkLesson.objects.exclude(id=lesson_id).\
         filter(yk_tow_list_id=two_list_id).values_list('id', 'yk_lesson_name','yk_lesson_img',
                              'yk_lesson_price','yk_buy_amount',
-                              'yk_lesson_price_type','yk_teacher_describe')[:5]
+                              'yk_lesson_price_type','yk_teacher_describe','yk_lesson_describe')[:5]
         for i in range(len(recommendLessons)):
             rec_lesson['lessonId'] = recommendLessons[i][0]
             rec_lesson['lessonName'] = recommendLessons[i][1]
@@ -49,6 +51,7 @@ def detail_view(request):
             rec_lesson['buyAmount'] = recommendLessons[i][4]
             rec_lesson['priceType'] = recommendLessons[i][5]
             rec_lesson['teacherDescribe'] = recommendLessons[i][6]
+            rec_lesson['lessonDescribe'] = recommendLessons[i][7]
             rel = copy.deepcopy(rec_lesson)
             recommendData.append(rel)
         if user_id:
@@ -56,7 +59,7 @@ def detail_view(request):
             likeLessons = YkLesson.objects.exclude(id=lesson_id).\
             filter(yk_lesson_price_type='免费').values_list('id', 'yk_lesson_name','yk_lesson_img',
                              'yk_lesson_price','yk_buy_amount',
-                              'yk_lesson_price_type','yk_teacher_describe')[:5]
+                              'yk_lesson_price_type','yk_teacher_describe','yk_lesson_describe')[:5]
             for i in range(len(likeLessons)):
                 likelesson['lessonId'] = likeLessons[i][0]
                 likelesson['lessonName'] = likeLessons[i][1]
@@ -65,6 +68,7 @@ def detail_view(request):
                 likelesson['buyAmount'] = likeLessons[i][4]
                 likelesson['priceType'] = likeLessons[i][5]
                 likelesson['teacherDescribe'] = likeLessons[i][6]
+                likelesson['lessonDescribe'] = likeLessons[i][7]
                 like = copy.deepcopy(likelesson)
                 likeData.append(like)
         result = {
@@ -104,8 +108,6 @@ def discuss_view(request):
 
     elif request.method == 'POST':
         pass
-
-
 
 
 
