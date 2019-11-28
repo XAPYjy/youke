@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from requests import Response
 
 from lesson_page.models import *
-from util.cache_ import valid_token
+# from util.cache_ import valid_token
 
 
 def detail_view(request):

@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
@@ -7,21 +8,28 @@ from yk_models.models import *
 
 
 class LessonSecondView(View):
-    def get(self, request):
+    def get(self, request,pagenumber=1):
         if request.GET.get('id',''):
             secondlist = YkSecondclass.objects.get(pk=request.GET.get('id'))
             return  JsonResponse({
                 'id':secondlist.id,
-                'secondid':secondlist.yk_secondclassid,
-                'secondname':secondlist.yk_secondclassname,
-                'firstid':secondlist.yk_firstclassid,
-                'image':secondlist.secondimage,
-                'url':secondlist.secondurl
+                'yk_secondclassid':secondlist.yk_secondclassid,
+                'yk_secondclassname':secondlist.yk_secondclassname,
+                'yk_firstclassid':secondlist.yk_firstclassid,
+                'secondimage':secondlist.secondimage,
+                'secondurl':secondlist.secondurl
             })
-            secondlists = YkSecondclass.objects.all()
+        secondlists = YkSecondclass.objects.all()
+        paginator = Paginator(secondlists, 8)  # 每页最多显示8条数据
+        if pagenumber > paginator.num_pages:
+            pagenumber -= 1
+        if pagenumber < 1:
+            pagenumber += 1
+            firstlists = paginator.page(pagenumber)
         return render(request, 'lesson_mgr/secondlist.html', locals())
 
     def post(self, request:HttpResponse):
+        id = request.POST.get("second_id",None)
         secondid = request.POST.get("secondlist_id",None)
         name = request.POST.get("name")
         first_id = request.POST.get("first_id")
