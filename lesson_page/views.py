@@ -5,6 +5,7 @@ from django.http import JsonResponse
 
 from lesson_page.models import *
 from tools.cache_ import valid_token
+from tools.request2json import req2json
 from yk_models.models import YkOrder, Bags
 
 # from util.cache_ import valid_token
@@ -114,8 +115,9 @@ def discuss_view(request):
         return JsonResponse(result)
 
 def add2cart(request):
-    token = request.POST.get('token')
-    pid = request.POST.get('lessonId')
+    json_data = req2json(request)
+    token = json_data.get('token')  # token验证用户的登陆状态
+    pid = json_data.get('lessonId')
     user_id = valid_token(token)
     lesson_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0]
     print('lesson_price=',lesson_price)
@@ -148,8 +150,9 @@ def add2cart(request):
 
 # 前端页面点击购买按钮，后台做的操作
 def buy_lesson(request):
-    token = request.POST.get('token')  # token验证用户的登陆状态
-    pid = int(request.POST.get('lessonId'))
+    json_data = req2json(request)
+    token = json_data.get('token')  # token验证用户的登陆状态
+    pid = json_data.get('lessonId')
     if not token:
         return JsonResponse({
             'code': 1,
@@ -199,8 +202,9 @@ def buy_lesson(request):
 # 支付成功后，修改相关参数
 
 def after_buy(request):
-    token = request.POST.get('token')  # token验证用户的登陆状态
-    num = request.POST.get("lessonId")  # 接收请求体中的nums参数
+    json_data = req2json(request)
+    token = json_data.get('token')  # token验证用户的登陆状态
+    num = json_data.get("lessonId")  # 接收请求体中的nums参数
     user_id = valid_token(token)
     # 修改购物车状态
     bag = Bags.objects.filter(yk_lesson_id=int(num), yk_user_id=user_id,yk_goods_type=False)

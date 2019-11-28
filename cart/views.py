@@ -1,9 +1,11 @@
+import json
 import time
 
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect
 from rest_framework.response import Response
 
+from tools.request2json import req2json
 from yk_models.models import YkWallet, Bags, YkLesson, YkOrder,YkUser
 from tools.cache_ import valid_token
 
@@ -16,22 +18,29 @@ from tools.cache_ import valid_token
 #     for c in carts:
 #         if discount:
 #             total += c.yk_price * 0.8
-#         else:
+#         elsyk_discusse:
 #             total += c.yk_price
 #     return "{:.2f}".format(total)
 
 
 # 当点击购物车按钮，遍历出未购买商品并返回给前端
 def get_cart(request):
-    token = request.POST.get('token')  # token验证用户的登陆状态
-    user_id = valid_token(token)
+    json_data = req2json(request)
+    token = json_data.get('token')  # token验证用户登陆状态
+    print(token)
+    try:
+        user_id = valid_token(token)
+    except:
+        return JsonResponse({
+            'code': 1,
+            'msg': '未登录,请重新登陆'})
     uname = YkUser.objects.filter(id=user_id).values('yk_name')[0]['yk_name']
     discount = YkWallet.objects.filter(yk_user_id=user_id).values('yk_discount')[0]['yk_discount']
     discount = int(float(discount) * 100 )
-    if not user_id:
-        return JsonResponse({
-            'code': 1,
-            'msg':'未登录,请重新登陆'})
+    # if not user_id:
+    #     return JsonResponse({
+    #         'code': 1,
+    #         'msg':'未登录,请重新登陆'})
 
     carts = Bags.objects.filter(yk_user_id=user_id,yk_goods_type=False) # 查询登录用户的所有未购买商品
     list_cart_id = []
@@ -54,8 +63,9 @@ def get_cart(request):
 
 # 前端页面点击 点击购买按钮，可能携带商品id列表
 def buy_lesson(request):
-    token = request.POST.get('token')  # token验证用户的登陆状态
-    pids = request.POST.get('pid').split(",")
+    json_data = req2json(request)
+    token = json_data.get('token')  # token验证用户的登陆状态
+    pids = json_data.get('pid').split(",")
     if not token:
         return JsonResponse({
             'code': 1,
@@ -98,10 +108,18 @@ def buy_lesson(request):
 # 支付成功后，修改相关参数
 
 def after_buy(request):
-    token = request.POST.get('token')  # token验证用户的登陆状态
-    nums = request.POST.get("orderid").split(',')  # 接收请求体中的orderid参数
+    json_data = req2json(request)
+    token = json_data.get('token')  # token验证用户的登陆状态
+    nums = json_data.get("orderid").split(',')  # 接收请求体中的orderid参数
     print(nums)
-    user_id = valid_token(token)
+    if not token:
+        print("没有接收到token")
+        return JsonResponse({"1111":"没有接收到！"})
+    try:
+        user_id = valid_token(token)
+    except:
+        print('没有登录！')
+        return JsonResponse({"1111": "没有接收到！"})
     for i in nums:
         print(i)
         global result
@@ -136,7 +154,8 @@ def after_buy(request):
 
 # 已购买接参
 def My_Bought( request):
-    uid = request.POST.get('token')  # token验证用户的登陆状态
+    json_data = req2json(request)
+    uid = json_data.get('token')  # token验证用户的登陆状态
     if not uid:
         return JsonResponse({
             'code': 1,
@@ -148,10 +167,11 @@ def My_Bought( request):
         list_buy_id.append(buy.yk_lesson_id)
     list_id = []
     for i in list_buy_id:
+        yk_video_progress = Bags.objects.filter(yk_user_id=user_id,yk_lesson_id=i).values('yk_video_progress')[0]['yk_video_progress']
         carts1 = YkLesson.objects.filter(id=i).values('id', 'yk_lesson_name', 'yk_course_chapter', 'yk_lesson_price',
                                                       'yk_lesson_img')[0]
+        carts1['videoProgress'] = yk_video_progress
         list_id.append(carts1)
-    print(list_id)
     # 将数据返回给前端
     result = {
         "code": 0,
