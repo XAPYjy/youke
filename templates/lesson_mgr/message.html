@@ -25,11 +25,11 @@
             <th class="text-center">轮播ID</th>
             <th class="text-center">推荐ID</th>
             <th class="text-center">用户ID</th>
-            <th class="text-center">购买数量</th>
-            <th class="text-center">播放数量</th>
-            <th class="text-center">课程章节</th>
-            <th class="text-center">一级分类ID</th>
-            <th class="text-center">二级分类ID</th>
+            <th class="text-center">购买量</th>
+            <th class="text-center">播放量</th>
+            <th class="text-center">章节</th>
+            <th class="text-center">一级类ID</th>
+            <th class="text-center">二级类ID</th>
             <th class="text-center">大小</th>
             <th class="text-center">点赞数</th>
             <th class="text-center" width="200px">操作</th>
@@ -39,7 +39,7 @@
         {% for lesson in lessons %}
             <tr>
                 <td>{{ lesson.id }}</td>
-                <td><video>{{ lesson.yk_video_jump_link }}</video></td>
+                <td><video  controls width="120"height="120" preload="none"><source src= "{{ lesson.yk_video_jump_link }}" type="video/mp4"></video></td>
                 <td>{{ lesson.yk_lesson_name }}</td>
                 <td>{{ lesson.yk_lesson_price }}</td>
                 <td>{{ lesson.yk_lesson_price_type }}</td>
@@ -48,7 +48,7 @@
                 <td>{{ lesson.yk_lesson_describe }}</td>
                 <td>{{ lesson.yk_lesson_contents }}</td>
                 <td>{{ lesson.yk_lesson_contents_mark }}</td>
-                <td>{{ lesson.yk_lesson_img|to_str|to_img_tag }}</td>
+                <td>{{ lesson.yk_lesson_img|to_img_tag }}</td>
                 <td>{{ lesson.yk_rotaion_id }}</td>
                 <td>{{ lesson.yk_recommend_id }}</td>
                 <td>{{ lesson.yk_user_id }}</td>
@@ -62,24 +62,40 @@
                 <td>
                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
                        onclick="edit({{ lesson.id }}, '{{ lesson.yk_video_jump_link }}','{{ lesson.yk_lesson_name }}',
-                               '{{ lesson.yk_lesson_price }}','{{ lesson.yk_lesson_price_type }}','{{ lesson.yk_lesson_dis_price }}',
+                               {{ lesson.yk_lesson_price }},'{{ lesson.yk_lesson_price_type }}',{{ lesson.yk_lesson_dis_price }},
                                '{{ lesson.yk_teacher_describe }}','{{ lesson.yk_lesson_describe }}','{{ lesson.yk_lesson_contents }}',
-                               '{{ lesson.yk_lesson_contents_mark }}','{{ lesson.yk_lesson_img }}',{{ lesson.yk_rotaion_id }},
-                               {{ lesson.yk_recommend_id }},{{ lesson.yk_user_id }},'{{ lesson.yk_buy_amount }}',
-                               '{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}',{{ lesson.yk_one_list_id }},
-                               {{ lesson.yk_tow_list_id }},'{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')">编辑</a>
+                               '{{ lesson.yk_lesson_contents_mark }}','{{ lesson.yk_lesson_img }}','{{ lesson.yk_rotaion_id }}',
+                               '{{ lesson.yk_recommend_id }}','{{ lesson.yk_user_id }}','{{ lesson.yk_buy_amount }}',
+                               '{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}','{{ lesson.yk_one_list_id }}',
+                               '{{ lesson.yk_tow_list_id }}','{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')">编辑</a>
                     <a onclick="delete_lesson({{ lesson.id }}, '{{ lesson.yk_video_jump_link }}','{{ lesson.yk_lesson_name }}',
-                               '{{ lesson.yk_lesson_price }}','{{ lesson.yk_lesson_price_type }}','{{ lesson.yk_lesson_dis_price }}',
+                               {{ lesson.yk_lesson_price }},'{{ lesson.yk_lesson_price_type }}',{{ lesson.yk_lesson_dis_price }},
                                '{{ lesson.yk_teacher_describe }}','{{ lesson.yk_lesson_describe }}','{{ lesson.yk_lesson_contents }}',
-                               '{{ lesson.yk_lesson_contents_mark }}','{{ lesson.yk_lesson_img }}',{{ lesson.yk_rotaion_id }},
-                               {{ lesson.yk_recommend_id }},{{ lesson.yk_user_id }},'{{ lesson.yk_buy_amount }}',
-                               '{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}',{{ lesson.yk_one_list_id }},
-                               {{ lesson.yk_tow_list_id }},'{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')" class="btn btn-danger btn-sm">删除</a>
+                               '{{ lesson.yk_lesson_contents_mark }}','{{ lesson.yk_lesson_img }}','{{ lesson.yk_rotaion_id }}',
+                               '{{ lesson.yk_recommend_id }}','{{ lesson.yk_user_id }}','{{ lesson.yk_buy_amount }}',
+                               '{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}','{{ lesson.yk_one_list_id }}',
+                               '{{ lesson.yk_tow_list_id }}','{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')" class="btn btn-danger btn-sm">删除</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <center>
+        <a href="{% url 'bk:ll' 1 %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">首页</button></a>
+        {% if lessons.has_previous %}
+            <a href="{% url 'bk:ll' lessons.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是首页了！！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% endif %}
+
+        {% if lessons.has_next %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:ll' lessons.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% endif %}
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:ll' paginator.num_pages %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">末页</button></a>
+    </center>
 
     <!--添加-->
     <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
@@ -106,19 +122,19 @@
                                 <input type="text" name="price"/>
                             </li>
                             <li>
-                                <label><span>价格类型 ：</span></label>
+                                <label><span>价格类 ：</span></label>
                                 <input type="text" name="price_type"/>
                             </li>
                             <li>
-                                <label><span>活动价格 ：</span></label>
+                                <label><span>活动价：</span></label>
                                 <input type="text" name="dis_price"/>
                             </li>
                             <li>
-                                <label><span>教师简介 ：</span></label>
+                                <label><span>教师简介：</span></label>
                                 <input type="text" name="tdescribe"/>
                             </li>
                             <li>
-                                <label><span>课程简介 ：</span></label>
+                                <label><span>课简介：</span></label>
                                 <input type="text" name="ldescribe"/>
                             </li>
                             <li>
@@ -126,11 +142,11 @@
                                 <input type="text" name="lcontens"/>
                             </li>
                              <li>
-                                <label><span>内容标记 ：</span></label>
+                                <label><span>内容标记：</span></label>
                                 <input type="text" name="lcontens_mark"/>
                             </li>
                              <li>
-                                <label><span>图片 ：</span></label>
+                                <label><span>图片链接：</span></label>
                                 <input type="text" name="img"/>
                             </li>
                              <li>
@@ -146,33 +162,28 @@
                                 <input type="text" name="user_id"/>
                             </li>
                              <li>
-                                <label><span>购买数量 ：</span></label>
+                                <label><span>购买数量：</span></label>
                                 <input type="text" name="buy_amount"/>
                             </li> <li>
                                 <label><span>观看量 ：</span></label>
                                 <input type="text" name="watch_amount"/>
                             </li> <li>
-                                <label><span>课程章节 ：</span></label>
+                                <label><span>章节：</span></label>
                                 <input type="text" name="course_chapter"/>
                             </li> <li>
-                                <label><span>一级分类 ：</span></label>
+                                <label><span>一级类ID：</span></label>
                                 <input type="text" name="one_list_id"/>
                             </li><li>
-                                <label><span>二级分类 ：</span></label>
+                                <label><span>二级类ID：</span></label>
                                 <input type="text" name="tow_list_id"/>
                             </li><li>
-                                <label><span>课程大小 ：</span></label>
+                                <label><span>课程大小：</span></label>
                                 <input type="text" name="size"/>
-                            </li><li>
-                                <label><span>一级分类 ：</span></label>
-                                <input type="text" name="one_list_id"/>
-                            </li><li>
-                                <label><span>点赞数 ：</span></label>
+                            </li>
+                            <li>
+                                <label><span>点赞数：</span></label>
                                 <input type="text" name="click"/>
                             </li>
-
-
-
                         </ul>
                     </div>
                     <div class="modal-footer">
@@ -213,19 +224,19 @@
                                 <input id='edit_price' type="text" name="price"/>
                             </li>
                             <li>
-                                <label><span>价格类型 ：</span></label>
+                                <label><span>价格类 ：</span></label>
                                 <input id='edit_pricetype' type="text" name="price_type"/>
                             </li>
                             <li>
-                                <label><span>活动价格 ：</span></label>
+                                <label><span>活动价 ：</span></label>
                                 <input id='edit_disprice' type="text" name="dis_price"/>
                             </li>
                             <li>
-                                <label><span>教师简介 ：</span></label>
+                                <label><span>教师简介：</span></label>
                                 <input id='edit_tdescribe' type="text" name="tdescribe"/>
                             </li>
                             <li>
-                                <label><span>课程简介 ：</span></label>
+                                <label><span>课程简介：</span></label>
                                 <input id='edit_ldescribe' type="text" name="ldescribe"/>
                             </li>
                             <li>
@@ -233,11 +244,11 @@
                                 <input id='edit_contens' type="text" name="lcontens"/>
                             </li>
                              <li>
-                                <label><span>内容标记 ：</span></label>
+                                <label><span>内容标记：</span></label>
                                 <input id='edit_contens_mark' type="text" name="lcontens_mark"/>
                             </li>
                              <li>
-                                <label><span>图片 ：</span></label>
+                                <label><span>图片：</span></label>
                                 <input id='edit_img' type="text" name="img"/>
                             </li>
                              <li>
@@ -253,32 +264,28 @@
                                 <input id='edit_user_id' type="text" name="user_id"/>
                             </li>
                              <li>
-                                <label><span>购买数量 ：</span></label>
+                                <label><span>购买量：</span></label>
                                 <input id='edit_buy_amount' type="text" name="buy_amount"/>
                             </li> <li>
-                                <label><span>观看量 ：</span></label>
+                                <label><span>观看量：</span></label>
                                 <input id='edit_watch_amount' type="text" name="watch_amount"/>
                             </li> <li>
-                                <label><span>课程章节 ：</span></label>
+                                <label><span>章节：</span></label>
                                 <input id='edit_course_chapter' type="text" name="course_chapter"/>
                             </li> <li>
-                                <label><span>一级分类 ：</span></label>
+                                <label><span>一级分类：</span></label>
                                 <input id='edit_one_list_id' type="text" name="one_list_id"/>
                             </li><li>
-                                <label><span>二级分类 ：</span></label>
+                                <label><span>二级分类：</span></label>
                                 <input id='edit_tow_list_id' type="text" name="tow_list_id"/>
                             </li><li>
-                                <label><span>课程大小 ：</span></label>
+                                <label><span>课程大小：</span></label>
                                 <input id='edit_class_size' type="text" name="size"/>
-                            </li><li>
-                                <label><span>一级分类 ：</span></label>
-                                <input id='edit_link' type="text" name="one_list_id"/>
-                            </li><li>
-                                <label><span>点赞数 ：</span></label>
+                            </li>
+                            <li>
+                                <label><span>点赞数：</span></label>
                                 <input id='edit_lesson_click' type="text" name="click"/>
                             </li>
-
-
                         </ul>
                     </div>
                     <div class="modal-footer">

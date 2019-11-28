@@ -7,7 +7,7 @@
     {% endblock %}
 
     {% block content %}
-        <div style="width:500px;height:500px;float:left;background-color: whitesmoke" id="chartmain">
+        <div style="width:550px;height:600px;float:left;background-color: whitesmoke" id="chartmain">
             <script src="/s/js/echarts.js"></script>
             <script type="text/javascript">
                 var myChart = echarts.init(document.getElementById('chartmain'));
@@ -74,6 +74,84 @@
                     }]
                 };
                 myChart.setOption(option);
+            </script>
+        </div>
+        <div style="width: 10px"></div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <div style="width:600px;height:600px;float:right;background-color: whitesmoke" id="chartmain1">
+            <script src="/s/js/echarts.js"></script>
+            <script type="text/javascript">
+                var myChart1 = echarts.init(document.getElementById('chartmain1'));
+                option = {
+                    title:{
+                        text:'2019用户月注册与流失'
+                    },
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['新增', '流失', '注册']
+
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'category',
+                            axisTick : {show: false},
+                            data : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月']
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'新增',
+                            type:'bar',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'inside'
+                                }
+                            },
+                            data:[200, 170, 240, 244, 200, 220, 210,230,300,140,200,130]
+                        },
+                        {
+                            name:'注册',
+                            type:'bar',
+                            stack: '注册',
+                            label: {
+                                normal: {
+                                    show: true
+                                }
+                            },
+                            data:[320, 302, 341, 374, 390, 450, 420,300,410,360,390,250]
+                        },
+                        {
+                            name:'流失',
+                            type:'bar',
+                            stack: '注册',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'left'
+                                }
+                            },
+                            data:[-120, -132, -101, -134, -190, -230, -210,-70,-110,-220,-190,-120]
+                        }
+                    ]
+                };
+                myChart1.setOption(option);
             </script>
         </div>
     {% endblock %}

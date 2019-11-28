@@ -12,8 +12,8 @@
         <thead>
         <tr class="info">
             <th class="text-center">id</th>
-            <th class="text-center">firstid</th>
-            <th class="text-center">firstname</th>
+            <th class="text-center">一级分类</th>
+            <th class="text-center">名称</th>
             <th class="text-center" width="200px">操作</th>
         </tr>
         </thead>
@@ -34,6 +34,22 @@
         {% endfor %}
         </tbody>
     </table>
+    <center>
+        <a href="{% url 'bk:lf' 1 %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">首页</button></a>
+        {% if firstlist.has_previous %}
+            <a href="{% url 'bk:lf' firstlist.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是首页了！！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% endif %}
+
+        {% if firstlist.has_next %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:lf' firstlist.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% endif %}
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:lf' paginator.num_pages %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">末页</button></a>
+    </center>
 
     <!--添加-->
     <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
@@ -134,15 +150,15 @@
             $('#edit').modal('show');
         }
 
-        var first_id = 0;
-        function delete_firstlist(firstid, firstlist_name) {
-            first_id = firstid;
+        var firstlist_id = 0;
+        function delete_firstlist(firstlistid, firstlist_name) {
+            firstlist_id = firstlistid;
             $('#msg').html('是否删除 '+ firstlist_name+" ?");
             $('#info').modal('toggle');
         }
 
         function delete_ajax() {
-            url = window.location.href + "?id=" + first_id;
+            url = window.location.href + "?id=" + firstlist_id;
             fetch(url, {
                 method: 'DELETE'
             }).then(resp => resp.json()).then(data => {
