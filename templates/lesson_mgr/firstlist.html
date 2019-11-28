@@ -1,9 +1,9 @@
 {% extends 'basic/base.html' %}
 
-{% block content_nav_home %}系统管理{% endblock %}
+{% block content_nav_home %}课程管理{% endblock %}
 
 {% block nav_path %}
-    <li><span>系统用户</span></li>
+    <li><span>一级分类</span></li>
 {% endblock %}
 
 {% block content %}
@@ -12,25 +12,23 @@
         <thead>
         <tr class="info">
             <th class="text-center">id</th>
-            <th class="text-center">name</th>
-            <th class="text-center">auth_string</th>
-            <th class="text-center">email</th>
-            <th class="text-center">phone</th>
+            <th class="text-center">firstid</th>
+            <th class="text-center">firstname</th>
             <th class="text-center" width="200px">操作</th>
         </tr>
         </thead>
         <tbody>
-        {% for suser in susers %}
+        {% for firstlist in firstlists %}
             <tr>
-                <td>{{ suser.id }}</td>
-                <td>{{ suser.name }}</td>
-                <td>{{ suser.auth_string }}</td>
-                <td>{{ suser.email }}</td>
-                <td>{{ suser.phone }}</td>
+                <td>{{ firstlist.id }}</td>
+                <td>{{ firstlist.yk_firstclassid }}</td>
+                <td>{{ firstlist.yk_firstclassname}}</td>
                 <td>
                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
-                       onclick="edit({{ suser.id }}, '{{ suser.name }}','{{ suser.auth_string }}','{{ suser.email }}','{{ suser.phone }}')">编辑</a>
-                    <a onclick="delete_suser({{ suser.id }}, '{{ suser.name }}','{{ suser.auth_string }}','{{ suser.email }}','{{ suser.phone }}')" class="btn btn-danger btn-sm">删除</a>
+                       onclick="edit({{ firstlist.id }},{{ firstlist.yk_firstclassid }},
+                               '{{ firstlist.yk_firstclassname}}')">编辑</a>
+                    <a onclick="delete_firstlist({{ firstlist.id }},{{ firstlist.yk_firstclassid }},
+                            '{{ firstlist.yk_firstclassname }}')" class="btn btn-danger btn-sm">删除</a>
                 </td>
             </tr>
         {% endfor %}
@@ -50,20 +48,12 @@
                     <div class="modal-body">
                         <ul>
                             <li>
-                                <label><span>用户名 ：</span></label>
+                                <label><span>一级ID：</span></label>
+                                <input type="text" name="firstlist_id"/>
+                            </li>
+                            <li>
+                                <label><span>一级分类名：</span></label>
                                 <input type="text" name="name"/>
-                            </li>
-                            <li>
-                                <label><span>安全口令：</span></label>
-                                <input type="password" name="password"/>
-                            </li>
-                            <li>
-                                <label><span>邮箱 ：</span></label>
-                                <input type="email" name="email"/>
-                            </li>
-                            <li>
-                                <label><span>电话 ：</span></label>
-                                <input type="text" name="phone"/>
                             </li>
                         </ul>
                     </div>
@@ -89,24 +79,16 @@
                     <div class="modal-body">
                         <ul>
                             <li>
-                                <label><span>用户ID ：</span></label>
-                                <input id="edit_id" type="text" name="suser_id" />
+                                <label><span>ID ：</span></label>
+                                <input id="edit_id" type="text" name="first_id" />
                             </li>
                             <li>
-                                <label><span>用户名 ：</span></label>
+                                <label><span>一级分类ID ：</span></label>
+                                <input id="edit_firstid" type="text" name="firstlist_id" />
+                            </li>
+                            <li>
+                                <label><span>一级分类名 ：</span></label>
                                 <input id="edit_name" type="text" name="name"/>
-                            </li>
-                            <li>
-                                <label><span>用户口令 ：</span></label>
-                                <input id="edit_pwd" type="password" name="password"  />
-                            </li>
-                            <li>
-                                <label><span>用户邮箱 ：</span></label>
-                                <input id="edit_email" type="email" name="email"/>
-                            </li>
-                            <li>
-                                <label><span>系统用户电话 ：</span></label>
-                                <input id="edit_phone" type="text" name="phone"/>
                             </li>
                         </ul>
                     </div>
@@ -145,24 +127,22 @@
 
 {% block js %}
     <script>
-        function edit(id, name,auth_string,email,phone) {
+        function edit(id,yk_firstclassid, yk_firstclassname) {
             $('#edit_id').val(id);
-            $('#edit_name').val(name);
-            $('#edit_pwd').val(auth_string);
-            $('#edit_email').val(email);
-            $('#edit_phone').val(phone);
+            $('#edit_firstid').val(yk_firstclassid);
+            $('#edit_name').val(yk_firstclassname);
             $('#edit').modal('show');
         }
 
-        var suser_id = 0;
-        function delete_suser(suserid, suser_name) {
-            suser_id = suserid;
-            $('#msg').html('是否删除 '+ suser_name+" ?");
+        var first_id = 0;
+        function delete_firstlist(firstid, firstlist_name) {
+            first_id = firstid;
+            $('#msg').html('是否删除 '+ firstlist_name+" ?");
             $('#info').modal('toggle');
         }
 
         function delete_ajax() {
-            url = window.location.href + "?id=" + suser_id;
+            url = window.location.href + "?id=" + first_id;
             fetch(url, {
                 method: 'DELETE'
             }).then(resp => resp.json()).then(data => {

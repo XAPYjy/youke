@@ -1,0 +1,1 @@
+alter table bags add yk_video_progress FLOAT

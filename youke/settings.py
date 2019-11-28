@@ -24,7 +24,6 @@ SECRET_KEY = '-16x(5!j67@oc3efi@q*3h*xe2qqt8tc0n(g*y_h(qi2_e#l*r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -34,19 +33,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.auth',
     'home_page',
     'rest_framework',
     'lesson_page',
     'back_system',
     'yk_models',
     'ykuser',
+    'video_rtmp',
+    'cart'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'back_system.middleware.valid_login',
     'corsheaders.middleware.CorsMiddleware',
+    # 'back_system.middleware.valid_login',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -78,9 +80,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'youke',
-        # 'HOST': 'localhost',
-        #'NAME': 'mysql',
         'HOST': '47.92.132.161',
+        # 'HOST': 'localhost',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'root',
@@ -122,14 +123,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+# 静态资源的加载
 STATIC_URL = '/s/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'statics')
+]
 
 # 静态资源文件
 STATIC_URL = '/s/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, "statics")
 ]
-
 
 # 上传的文件存放位置
 MEDIA_URL = '/s/m/'
@@ -137,17 +142,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/media')
 
 # 配置redis缓存
 CACHES = {
-     'redis': {
+    'redis': {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://47.92.132.161:6379/1",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     },
-    'default':{
-        'BACKEND':'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION':'cache.dat',
-        'TIMEOUT':60,
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': 'cache.dat',
+        'TIMEOUT': 60,
         'OPTIONS': {
             'MAX_ENTRIES': 1000
         }
@@ -156,9 +161,8 @@ CACHES = {
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_COOKIE_NAME = 'session_id'
-SESSION_COOKIE_AGE = 604800    # 一周有效时长（秒）
-SESSION_CACHE_ALIAS = 'redis'  #缓存方案，默认default
-
+SESSION_COOKIE_AGE = 604800  # 一周有效时长（秒）
+SESSION_CACHE_ALIAS = 'redis'  # 缓存方案，默认default
 
 # 跨域允许的请求方式
 CORS_ALLOW_METHODS = (
@@ -191,7 +195,6 @@ CORS_ORIGIN_ALLOW_ALL = True  # 允许所有主机执行跨站点请求
 REST_FRAMEWORK = {
     # 重构renderer
     'DEFAULT_RENDERER_CLASSES': (
-        'util.renderer.YKrender',
+        'tools.renderer.YKrender',
     ),
 }
-

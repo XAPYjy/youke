@@ -7,17 +7,17 @@
 {% endblock %}
 
 {% block content %}
-    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#add1" style="margin: 5px 0">添加</a>
+{#    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#add1" style="margin: 5px 0">添加</a>#}
     <table class="table table-bordered table-striped text-center bg-info">
         <thead>
-        <tr class="info">
-            <th class="text-center">id</th>
-            <th class="text-center">goods_id</th>
-            <th class="text-center">status</th>
-            <th class="text-center">total_price</th>
-            <th class="text-center">user_id</th>
-            <th class="text-center" width="200px">操作</th>
-        </tr>
+            <tr class="info">
+                <th class="text-center">id</th>
+                <th class="text-center">goods_id</th>
+                <th class="text-center">status</th>
+                <th class="text-center">total_price</th>
+                <th class="text-center">user_id</th>
+                <th class="text-center" width="200px">操作</th>
+            </tr>
         </thead>
         <tbody>
         {% for order in orders %}
@@ -28,8 +28,8 @@
                 <td>{{ order.yk_total_price }}</td>
                 <td>{{ order.yk_user_id }}</td>
                 <td>
-                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
-                       onclick="edit({{ order.id }}, '{{ order.yk_goods_id }}', '{{ order.yk_isorderstatus }}','{{ order.yk_total_price }}','{{ order.yk_user_id }}')">编辑</a>
+{#                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal"#}
+{#                       onclick="edit({{ order.id }}, '{{ order.yk_goods_id }}', '{{ order.yk_isorderstatus }}','{{ order.yk_total_price }}','{{ order.yk_user_id }}')">编辑</a>#}
                     <a onclick="delete_order({{ order.id }}, '{{ order.yk_goods_id }}', '{{ order.yk_isorderstatus }}','{{ order.yk_total_price }}','{{ order.yk_user_id }}')" class="btn btn-danger btn-sm">删除</a>
                 </td>
             </tr>
@@ -129,23 +129,23 @@
 
 {% block js %}
     <script>
-        function edit(id, name, code) {
-            $('#edit_id').val(id);
-            $('#edit_name').val(name);
-            $('#edit_code').val(code);
+        {#function edit(id, name, code) {#}
+        {#    $('#edit_id').val(id);#}
+        {#    $('#edit_name').val(name);#}
+        {#    $('#edit_code').val(code);#}
+        {##}
+        {#    $('#edit').modal('show');#}
+        {#\}#}
 
-            $('#edit').modal('show');
-        }
-
-        var role_id = 0;
-        function delete_role(roleid, role_name) {
-            role_id = roleid;
-            $('#msg').html('是否删除 '+ role_name+" ?");
+        var order_id = 0;
+        function delete_order(orderid) {
+            order_id = orderid;
+            $('#msg').html('是否删除 该订单？');
             $('#info').modal('toggle');
         }
 
         function delete_ajax() {
-            url = window.location.href + "?id=" + role_id;
+            url = window.location.href + "?id=" + order_id;
             fetch(url, {
                 method: 'DELETE'
             }).then(resp => resp.json()).then(data => {

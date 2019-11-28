@@ -2,15 +2,16 @@ from django.core.cache import cache
 from rest_framework.authentication import BaseAuthentication
 
 
-from util.error import YKException
+from tools.error import YKException
+from ykuser.models import YKUser
 
 
 class TokenAuthentication(BaseAuthentication):
     def authenticate(self, request):
         token = request.data.get("token") if request.data.get("token") else request.query_params.get("token")
-        username = cache.get(token)
+        user_id = cache.get(token)
         try:
-            user = User.objects.get(username=username)
+            user = YKUser().select_all(id=user_id)
             return (user, token)   #  返回的该元祖的两个元素会做这样处理，request.user=user,request.auth=token
         except:
             result = {

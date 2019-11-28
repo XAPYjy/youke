@@ -37,7 +37,7 @@ class SUserView(View):
             suser.save()
         else:
             suser = SysUser.objects.create(name=name,auth_string=make_pwd(pwd),email=email,phone=phone)
-        return redirect('/syuser/')
+        return redirect('/back/syuser/')
 
     def delete(self, request):
         suser_id = request.GET.get('id')

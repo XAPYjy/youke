@@ -2,7 +2,7 @@
 # coding: utf-8
 import json
 
-from util import rd2 as rd
+from tools import rd2 as rd
 
 import random
 
@@ -12,7 +12,7 @@ from aliyunsdkcore.request import CommonRequest
 
 
 def _gen_code():
-    return str(random.randint(10000, 99999))
+    return str(random.randint(100000, 999999))
 
 
 def _send_sms(phone, code):
