@@ -30,6 +30,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
+    'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
@@ -39,13 +40,14 @@ INSTALLED_APPS = [
     'back_system',
     'yk_models',
     'ykuser',
+    'video_rtmp',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'back_system.middleware.valid_login',
     'corsheaders.middleware.CorsMiddleware',
+    # 'back_system.middleware.valid_login',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -129,7 +131,8 @@ STATICFILES_DIRS = [
 # 静态资源文件
 STATIC_URL = '/s/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, "statics")
 ]
 
 # 上传的文件存放位置

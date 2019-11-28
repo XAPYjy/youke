@@ -165,6 +165,7 @@ class YkLesson(models.Model):
     yk_tow_list_id = models.IntegerField(blank=True, null=True)
     yk_class_size = models.CharField(max_length=20, blank=True, null=True)
     yk_lesson_click = models.IntegerField(blank=True, null=True)
+    yk_up_time = models.CharField(max_length=20, blank=True, null=True)
 
     class Meta:
         managed = False

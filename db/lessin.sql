@@ -57,6 +57,7 @@ create table yk_lesson
    yk_tow_list_id       int,
    yk_class_size        char(20),
    yk_lesson_click      int,
+   yk_up_time varchar(30),
    primary key (id)
 );
 

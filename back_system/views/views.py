@@ -14,27 +14,27 @@ def index_view(request: HttpRequest):
 def login_view(request: HttpRequest):
     if request.method == "POST":
         # 获取用户名和口令
-        logname = request.POST.get('logname','')
-        logpwd = request.POST.get('logpwd','')
-        print(logname,logpwd)
-        if any((not logname,not logpwd,len(logname) == 0,len(logpwd) == 0)):
+        logname = request.POST.get('logname', '')
+        logpwd = request.POST.get('logpwd', '')
+        print(logname, logpwd)
+        if any((not logname, not logpwd, len(logname) == 0, len(logpwd) == 0)):
             error = '用户名或密码不能为空！'
         else:
-            ret = SysUser.objects.filter(name=logname,auth_string=make_pwd(logpwd))
+            ret = SysUser.objects.filter(name=logname, auth_string=make_pwd(logpwd))
             print(ret)
             if ret.exists():
                 login_user = ret.first()
 
                 # 将登录的用户信息存到session中
                 request.session['login_user'] = {
-                    'id':login_user.id,
-                    'name':login_user.name,
-                    'role_name':login_user.role.name,
-                    'role_code':login_user.role.code
+                    'id': login_user.id,
+                    'name': login_user.name,
+                    'role_name': login_user.role.name,
+                    'role_code': login_user.role.code
                 }
                 return redirect('/')
             error = '用户名或密码错误！'
-    return render(request,'login.html',locals())
+    return render(request, 'login.html', locals())
 
 
 def register_view(request: HttpRequest):
@@ -47,7 +47,7 @@ def logout_view(request: HttpRequest):
 
 
 class ESView(View):
-    def get(self,request):
+    def get(self, request):
         # 同步ES（初始化）
         es_.create_index()
 
@@ -55,22 +55,21 @@ class ESView(View):
         cursor.execute('select id,name,ord_sn,parent_id from t_category')
         for row in cursor.fetchall():
             doc = {
-                'id':row[0],
-                'name':row[1],
-                'ord_sn':row[2],
-                'parent_id':row[3]
+                'id': row[0],
+                'name': row[1],
+                'ord_sn': row[2],
+                'parent_id': row[3]
             }
             es_.add_doc(doc, 'category')
 
         return JsonResponse({
-            'status':0,
-            'msg':'同步ElasticSearch搜索引擎成功'
+            'status': 0,
+            'msg': '同步ElasticSearch搜索引擎成功'
         })
 
 
 class ESLogView(View):
     def post(self, request):
-
         data = request.POST
         print(data)
 

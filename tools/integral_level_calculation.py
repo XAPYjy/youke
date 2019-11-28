@@ -7,8 +7,6 @@ def compute(money, integral):
     """
     part = money * 0.1
     integral += part
-    member = "柚籽"
-    discount = "0.99"
     if integral <= 200:
         member = "柚籽"
         discount = "0.99"
