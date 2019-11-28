@@ -9,40 +9,37 @@ from yk_models.models import *
 class LessonFirstView(View):
     def get(self, request):
         if request.GET.get('id',''):
-            suser = SysUser.objects.get(pk=request.GET.get('id'))
-            return  JsonResponse({
-                'id':suser.id,
-                'name':suser.name,
-                'auth_string':suser.auth_string,
-                'email':suser.email,
-                'phone':suser.phone
+            firstlist = YkFirstclass.objects.get(pk=request.GET.get('id'))
+            print('firstlist=',firstlist)
+            return JsonResponse({
+                'id':firstlist.id,
+                'firstid':firstlist.yk_firstclassid,
+                'firstname':firstlist.yk_firstclassname
             })
-        susers = SysUser.objects.all()
+            firstlists =YkFirstclass.objects.all()
+            print('firstlists=',firstlists)
         return render(request, 'lesson_mgr/firstlist.html', locals())
 
     def post(self, request:HttpResponse):
-        id = request.POST.get("suser_id",None)
-        name = request.POST.get("name")
-        pwd = request.POST.get("password")
-        email = request.POST.get("email")
-        phone = request.POST.get("phone")
+        id = request.POST.get('first_id')
+        firstid = request.POST.get("firstlist_id",None)
+        firstname = request.POST.get("name")
         # 验证是否为空（建议：页面上验证）
         if id:
             # 更新
-            suser = SysUser.objects.get(pk=id)
-            suser.name = name
-            suser.auth_string = pwd
-            suser.email = email
-            suser.phone = phone
-            suser.save()
+
+            firstlist = YkFirstclass.objects.get(pk=id)
+            firstlist.yk_firstclassid = firstid
+            firstlist.yk_firstclassname = firstname
+            firstlist.save()
         else:
-            suser = SysUser.objects.create(name=name,auth_string=make_pwd(pwd),email=email,phone=phone)
-        return redirect('/lfirst/')
+            firstlist = YkFirstclass.objects.create(yk_firstclassid=firstid,yk_firstclassname=firstname)
+        return redirect('/back/lfirst/')
 
     def delete(self, request):
-        suser_id = request.GET.get('id')
-        suser = SysUser.objects.get(pk=suser_id)
-        suser.delete()
+        firstlist_id = request.GET.get('id')
+        firstlist = YkFirstclass.objects.get(pk=firstlist_id)
+        firstlist.delete()
 
         return JsonResponse({
             'status': 0,

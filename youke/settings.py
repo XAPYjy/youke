@@ -30,10 +30,10 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
-    'django.contrib.auth',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.auth',
     'home_page',
     'rest_framework',
     'lesson_page',
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'yk_models',
     'ykuser',
     'video_rtmp',
+    'cart'
 ]
 
 MIDDLEWARE = [

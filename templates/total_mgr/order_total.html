@@ -1,178 +1,215 @@
 {% extends 'basic/base.html' %}
 
-{% block content_nav_home %}系统管理{% endblock %}
+{% block content_nav_home %}统计管理{% endblock %}
 
 {% block nav_path %}
-    <li><span>系统用户</span></li>
+    <li><span>订单统计</span></li>
 {% endblock %}
 
 {% block content %}
-    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#add1" style="margin: 5px 0">添加</a>
-    <table class="table table-bordered table-striped text-center bg-info">
-        <thead>
-        <tr class="info">
-            <th class="text-center">id</th>
-            <th class="text-center">name</th>
-            <th class="text-center">auth_string</th>
-            <th class="text-center">email</th>
-            <th class="text-center">phone</th>
-            <th class="text-center" width="200px">操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for suser in susers %}
-            <tr>
-                <td>{{ suser.id }}</td>
-                <td>{{ suser.name }}</td>
-                <td>{{ suser.auth_string }}</td>
-                <td>{{ suser.email }}</td>
-                <td>{{ suser.phone }}</td>
-                <td>
-                    <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
-                       onclick="edit({{ suser.id }}, '{{ suser.name }}','{{ suser.auth_string }}','{{ suser.email }}','{{ suser.phone }}')">编辑</a>
-                    <a onclick="delete_suser({{ suser.id }}, '{{ suser.name }}','{{ suser.auth_string }}','{{ suser.email }}','{{ suser.phone }}')" class="btn btn-danger btn-sm">删除</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div style="width: 100%;height:auto;float:left;background-color: whitesmoke" id="chartmain1">
+        <script src="/s/js/echarts.js"></script>
+        <script type="text/javascript">
 
-    <!--添加-->
-    <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="add11">添加</h4>
-                </div>
-                <form method="post">
-                    <div class="modal-body">
-                        <ul>
-                            <li>
-                                <label><span>用户名 ：</span></label>
-                                <input type="text" name="name"/>
-                            </li>
-                            <li>
-                                <label><span>安全口令：</span></label>
-                                <input type="password" name="password"/>
-                            </li>
-                            <li>
-                                <label><span>邮箱 ：</span></label>
-                                <input type="email" name="email"/>
-                            </li>
-                            <li>
-                                <label><span>电话 ：</span></label>
-                                <input type="text" name="phone"/>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
-                        <button class="btn btn-primary btn-sm">保存</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+            var myChart1 = echarts.init(document.getElementById('chartmain1'));
+            var app = {};
+            options = null;
+            option = {
+                title: {
+                    text: '动态数据',
+                    subtext: '纯属虚构'
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#283b56'
+                        }
+                    }
+                },
+                legend: {
+                    data: ['最新成交价', '预购队列']
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        dataView: {readOnly: false},
+                        restore: {},
+                        saveAsImage: {}
+                    }
+                },
+                dataZoom: {
+                    show: false,
+                    start: 0,
+                    end: 100
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: true,
+                        data: (function () {
+                            var now = new Date();
+                            var res = [];
+                            var len = 10;
+                            while (len--) {
+                                res.unshift(now.toLocaleTimeString().replace(/^\D*/, ''));
+                                now = new Date(now - 2000);
+                            }
+                            return res;
+                        })()
+                    },
+                    {
+                        type: 'category',
+                        boundaryGap: true,
+                        data: (function () {
+                            var res = [];
+                            var len = 10;
+                            while (len--) {
+                                res.push(10 - len - 1);
+                            }
+                            return res;
+                        })()
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        scale: true,
+                        name: '价格',
+                        max: 30,
+                        min: 0,
+                        boundaryGap: [0.2, 0.2]
+                    },
+                    {
+                        type: 'value',
+                        scale: true,
+                        name: '预购量',
+                        max: 1200,
+                        min: 0,
+                        boundaryGap: [0.2, 0.2]
+                    }
+                ],
+                series: [
+                    {
+                        name: '预购队列',
+                        type: 'bar',
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        data: (function () {
+                            var res = [];
+                            var len = 10;
+                            while (len--) {
+                                res.push(Math.round(Math.random() * 1000));
+                            }
+                            return res;
+                        })()
+                    },
+                    {
+                        name: '最新成交价',
+                        type: 'line',
+                        data: (function () {
+                            var res = [];
+                            var len = 0;
+                            while (len < 10) {
+                                res.push((Math.random() * 10 + 5).toFixed(1) - 0);
+                                len++;
+                            }
+                            return res;
+                        })()
+                    }
+                ]
+            };
+            app.count = 11;
+            setInterval(function (){
+                axisData = (new Date()).toLocaleTimeString().replace(/^\D*/,'');
+
+                var data0 = option.series[0].data;
+                var data1 = option.series[1].data;
+                data0.shift();
+                data0.push(Math.round(Math.random() * 1000));
+                data1.shift();
+                data1.push((Math.random() * 10 + 5).toFixed(1) - 0);
+
+                option.xAxis[0].data.shift();
+                option.xAxis[0].data.push(axisData);
+                option.xAxis[1].data.shift();
+                option.xAxis[1].data.push(app.count++);
+
+                myChart1.setOption(option);
+            }, 2100);
+
+        </script>
     </div>
 
-    <!-- 编辑 -->
-    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="add11">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="add11">编辑</h4>
-                </div>
-                <form method="post">
-                    <div class="modal-body">
-                        <ul>
-                            <li>
-                                <label><span>用户ID ：</span></label>
-                                <input id="edit_id" type="text" name="suser_id" />
-                            </li>
-                            <li>
-                                <label><span>用户名 ：</span></label>
-                                <input id="edit_name" type="text" name="name"/>
-                            </li>
-                            <li>
-                                <label><span>用户口令 ：</span></label>
-                                <input id="edit_pwd" type="password" name="password"  />
-                            </li>
-                            <li>
-                                <label><span>用户邮箱 ：</span></label>
-                                <input id="edit_email" type="email" name="email"/>
-                            </li>
-                            <li>
-                                <label><span>系统用户电话 ：</span></label>
-                                <input id="edit_phone" type="text" name="phone"/>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
-                        <button class="btn btn-primary btn-sm">保存</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <div style="width:1000px;height:550px;float:left;background-color: whitesmoke" id="chartmain">
+        <script src="/s/js/echarts.js"></script>
+        <script type="text/javascript">
+
+            var myChart = echarts.init(document.getElementById('chartmain'));
+
+            option = {
+                title :{
+                    text:'日,月,年与课类型订单'
+                },
+                tooltip : {
+                    trigger: 'axis',
+                    axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                        type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                    }
+                },
+                legend: {
+                    data:['日订单','月订单','年订单']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis : [
+                    {
+                        type : 'category',
+                        data : ['IT','设计','电商','考证','兴趣','语言','运动']
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value'
+                    }
+                ],
+                series : [
+                    {
+                        name:'日订单',
+                        type:'bar',
+                        data:[120, 132, 101, 134, 90, 230, 210]
+                    },
+                    {
+                        name:'月订单',
+                        type:'bar',
+                        data:[320, 332, 301, 334, 390, 330, 320]
+                    },
+
+                    {
+                        name:'年订单',
+                        type:'bar',
+                        data:[862, 1018, 964, 1026, 1679, 1600, 1570],
+                        markLine : {
+                            lineStyle: {
+                                normal: {
+                                    type: 'dashed'
+                                }
+                            },
+                            data : [
+                                [{type : 'min'}, {type : 'max'}]
+                            ]
+                        }
+                    },
+
+                ]
+            };
+            myChart.setOption(option);
+        </script>
     </div>
-
-    <!-- 提示 -->
-    <div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="add11">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="add11">提示信息</h4>
-                </div>
-
-                <div class="modal-body">
-
-                    <h4 id="msg"></h4>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
-                    <button onclick="delete_ajax()" class="btn btn-warning btn-sm">确定</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-{% endblock %}
-
-{% block js %}
-    <script>
-        function edit(id, name,auth_string,email,phone) {
-            $('#edit_id').val(id);
-            $('#edit_name').val(name);
-            $('#edit_pwd').val(auth_string);
-            $('#edit_email').val(email);
-            $('#edit_phone').val(phone);
-            $('#edit').modal('show');
-        }
-
-        var suser_id = 0;
-        function delete_suser(suserid, suser_name) {
-            suser_id = suserid;
-            $('#msg').html('是否删除 '+ suser_name+" ?");
-            $('#info').modal('toggle');
-        }
-
-        function delete_ajax() {
-            url = window.location.href + "?id=" + suser_id;
-            fetch(url, {
-                method: 'DELETE'
-            }).then(resp => resp.json()).then(data => {
-                alert(data.msg);
-                if (data.status == 0) {
-                    // 刷新当前页面
-                    open(window.location.href, target = '_self');
-                }
-            })
-        }
-    </script>
 {% endblock %}
 

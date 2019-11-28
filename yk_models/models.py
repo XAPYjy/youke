@@ -8,15 +8,17 @@
 from django.db import models
 
 
+# 柚子树
 class Bags(models.Model):
-    yk_goods_type = models.IntegerField()
-    yk_list_id = models.IntegerField(blank=True, null=True)
-    yk_lesson_id = models.IntegerField()
-    yk_price = models.FloatField()
-    yk_authority = models.IntegerField()
-    yk_user_id = models.IntegerField()
-    yk_time = models.TimeField()
-
+    yk_goods_type = models.BooleanField()   # 购物车状态(已购,未购)
+    yk_list_id = models.IntegerField(blank=True, null=True) # 课程列表id
+    yk_lesson_id = models.IntegerField()    #   课程详情id
+    yk_user_id = models.IntegerField()      # 用户id
+    yk_price = models.FloatField()          # 价格
+    # yk_num = models.IntegerField()          # 单个商品的购买数量
+    yk_time = models.TimeField()            # 购买时间
+    # yk_is_selected = models.BooleanField(default=True)  # 购物车记录的选中状态
+    yk_video_progress = models.FloatField()
     class Meta:
         managed = False
         db_table = 'bags'
@@ -46,6 +48,14 @@ class SysUser(models.Model):
     auth_string = models.CharField(max_length=100)
     email = models.CharField(max_length=50, blank=True, null=True)
     phone = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return "%s %s %s %s" % (self.name, self.auth_string, self.email, self.phone)
+
+    @property
+    def role(self):
+        role_id = SysUserRole.objects.get(user_id=self.id).role_id
+        return SysRole.objects.get(pk=role_id)
 
     class Meta:
         managed = False
@@ -205,8 +215,7 @@ class YkMyClass(models.Model):
 
 class YkOrder(models.Model):
     yk_goods_id = models.IntegerField(blank=True, null=True)
-    yk_isorderstatus = models.IntegerField(db_column='yk_isorderStatus', blank=True,
-                                           null=True)  # Field name made lowercase.
+    yk_isorderstatus = models.BooleanField(default=False)
     yk_total_price = models.FloatField(blank=True, null=True)
     yk_user_id = models.IntegerField(blank=True, null=True)
 
@@ -247,8 +256,8 @@ class YkSecondclass(models.Model):
 
 
 class YkUser(models.Model):
-    yk_name = models.CharField(max_length=50, blank=True, null=True)
-    yk_auto_string = models.CharField(max_length=100, blank=True, null=True)
+    yk_name = models.CharField(max_length=50, blank=True, null=True, verbose_name='账号')
+    yk_auto_string = models.CharField(max_length=100, blank=True, null=True, verbose_name='口令')
     yk_emil = models.CharField(max_length=50, blank=True, null=True)
     yk_phone = models.CharField(max_length=20, blank=True, null=True)
     sys_auth = models.IntegerField(blank=True, null=True)
