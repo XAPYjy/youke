@@ -5,12 +5,9 @@ from django.http import JsonResponse
 from requests import Response
 
 from lesson_page.models import *
-<<<<<<< HEAD
 # from util.cache_ import valid_token
-=======
 from tools.cache_ import valid_token
 from yk_models.models import YkOrder, Bags
->>>>>>> 0e87ecd697c2213e3314177e5ae83a2ec14decb2
 
 
 def detail_view(request):

@@ -1,6 +1,6 @@
 import requests
 
-HOST = 'localhost'
+HOST = '41.92.132.161'
 PORT = 80   # 默认9200
 INDEX = 'youke'
 
