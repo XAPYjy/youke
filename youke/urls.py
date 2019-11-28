@@ -34,7 +34,9 @@ urlpatterns = [
     path('video_img/<image_url>/', image_video_view),  # 查看视频图片路由
     path('youke/', include(router_user.urls)),  # 我的页面路由
     path('video/', include("video_rtmp.urls")),  # 课程视频路由
-    path('cart/',include('cart.urls'))
+    path('cart/',include('cart.urls')),
+    path('gate/',include('class_ls.urls'))
+
     ]
 
 
