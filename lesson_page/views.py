@@ -1,14 +1,21 @@
 import copy
+import time
 
 from django.http import JsonResponse
 from requests import Response
 
 from lesson_page.models import *
+<<<<<<< HEAD
 # from util.cache_ import valid_token
+=======
+from tools.cache_ import valid_token
+from yk_models.models import YkOrder, Bags
+>>>>>>> 0e87ecd697c2213e3314177e5ae83a2ec14decb2
 
 
 def detail_view(request):
     if request.method == "GET":
+        global result
         lessonData = {}
         recommendData = []
         rec_lesson = {}
@@ -106,8 +113,112 @@ def discuss_view(request):
         }
         return JsonResponse(result)
 
-    elif request.method == 'POST':
-        pass
+def add2cart(request):
+    token = request.POST.get('token')
+    pid = request.POST.get('lessonId')
+    user_id = valid_token(token)
+    lesson_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0]
+    print('lesson_price=',lesson_price)
+    islesson = Bags.objects.filter(yk_user_id=user_id,yk_lesson_id=pid).first()
+    print('islesson=',islesson)
+    i = float("1")
+    if not islesson:
+        global result
+        Bags.objects.create(
+            yk_goods_type=False,
+            yk_list_id=None,
+            yk_lesson_id=pid,
+            yk_price=lesson_price,
+            yk_user_id=user_id,
+            yk_time=None,
+            yk_video_progress=0
+        )
+        result = {
+            'code': 0,
+            'msg': '添加成功！'
+        }
+    else:
+        result = {
+            'code':0,
+            'msg':'添加失败，已存在购物车，请勿重新添加！'
+        }
+
+    return JsonResponse(result)
+
+
+# 前端页面点击购买按钮，后台做的操作
+def buy_lesson(request):
+    token = request.POST.get('token')  # token验证用户的登陆状态
+    pid = int(request.POST.get('lessonId'))
+    if not token:
+        return JsonResponse({
+            'code': 1,
+            'msg': '未登录,请重新登陆'})
+    user_id = valid_token(token)
+    carts = YkOrder.objects.filter(yk_user_id=user_id).values_list('yk_goods_id')
+    print(carts)
+    order_list = []
+    for i in carts:
+        order_list.append(i[0])
+    total_price = 0
+    if pid in order_list:
+        lessonname = YkLesson.objects.filter(id=pid).values('yk_lesson_name')[0]
+        result = {
+            "code": 0,
+            "msg": str(lessonname['yk_lesson_name']) + "已存在订单中，请勿重新添加！！！"
+        }
+        return JsonResponse(result)
+    else:
+        yk_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0]
+        total_price += yk_price
+        YkOrder.objects.create(yk_goods_id=pid,
+                               yk_total_price=total_price,
+                               yk_isorderstatus=None,
+                               yk_user_id=user_id)
+
+        num = YkOrder.objects.filter(yk_goods_id=pid,yk_user_id=user_id).values('id')[0]['id']
+        Bags.objects.create(
+            yk_goods_type=False,
+            yk_list_id=None,
+            yk_lesson_id=pid,
+            yk_price=yk_price,
+            yk_user_id=user_id,
+            yk_time=None,
+            yk_video_progress=0
+        )
+
+        result = {
+            "code": 0,
+            'msg': '已添加至订单中，请跳转支付！！',
+            'orderid': num,  # 此参数用作，支付成功后修改相关参数
+            'total_price': total_price
+        }
+    return JsonResponse(result)
+
+
+# 支付成功后，修改相关参数
+
+def after_buy(request):
+    token = request.POST.get('token')  # token验证用户的登陆状态
+    num = request.POST.get("lessonId")  # 接收请求体中的nums参数
+    user_id = valid_token(token)
+    # 修改购物车状态
+    bag = Bags.objects.filter(yk_lesson_id=int(num), yk_user_id=user_id,yk_goods_type=False)
+    now = time.localtime()
+    t62 = time.strftime("%H:%M[:%S[%Y-%m-%d]]", now)
+    try:
+        bag.update(yk_time=t62,yk_goods_type=True)  #修改一条购物车记录
+        result = {
+            'code': 0,
+            'msg': '商品已成功购买'
+        }
+    except:
+        result = {
+            'code': 0,
+            'msg': '商品购买失败！'
+        }
+
+    return JsonResponse(result)
 
 
 

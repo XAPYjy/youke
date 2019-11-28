@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from yk_models.models import YkUser, YkInformation, YkWallet, YkBillingDetails, YkBankCard
+from yk_models.models import YkUser, YkInformation, YkWallet, YkBillingDetails, YkBankCard, YkLesson
 
 
 # 用户类
@@ -16,6 +16,11 @@ class YKUser(YkUser):
         except:
             return None
 
+    def up_pwd(self, user_id, up_pwd):
+        users = YKUser.objects.filter(id=user_id)
+        users.yk_auto_string = up_pwd
+        users.save()
+
 
 # 个人资料类
 class InFor(YkInformation):
@@ -27,7 +32,7 @@ class InFor(YkInformation):
             return None
 
     def save_infor(self, user_id, nikname=None, name=None, head=None, sex=None,
-                   age=None, career=None, hobby=None, idnumber=None, signature=None):
+                   age=0, career=None, hobby=None, signature=None):
         """
         :param nikname: 昵称
         :param name: 真实姓名
@@ -44,12 +49,21 @@ class InFor(YkInformation):
         if self.select_infor_all(user_id):
             infor_update = YkInformation.objects.filter(yk_user_id=user_id)
             infor_update.update(yk_nickname=nikname, yk_name=name, yk_avatar=head,
-                                yk_sex=sex, yk_age=age, yk_career=career, yk_hobby=hobby, yk_idnumber=idnumber,
+                                yk_sex=sex, yk_age=age, yk_career=career, yk_hobby=hobby,
                                 yk_signature=signature, yk_user_id=user_id)
         else:
             YkInformation.objects.create(yk_nickname=nikname, yk_name=name, yk_avatar=head,
-                                         yk_sex=sex, yk_age=age, yk_career=career, yk_hobby=hobby, yk_idnumber=idnumber,
+                                         yk_sex=sex, yk_age=age, yk_career=career, yk_hobby=hobby,
                                          yk_signature=signature, yk_user_id=user_id)
+
+    # 头像上传
+    def up_head(self, user_id, head_img):
+        infor = YkInformation.objects.filter(yk_user_id=user_id).first()
+        if infor:
+            infor.yk_avatar = head_img
+            infor.save()
+        else:
+            YkInformation.objects.create(yk_user_id=user_id, yk_avatar=head_img)
 
 
 # 钱包类
@@ -88,6 +102,10 @@ class Pack(YkWallet):
         # pay_pwd: 支付密码
         try:
             wallet = YkWallet.objects.filter(yk_user_id=user_id).first()
+            # 判断查询为空，重新添加
+            if not wallet:
+                YkWallet.objects.create(yk_user_id=user_id, yk_pay_pwd=pay_pwd)
+                return True
             wallet.yk_pay_pwd = pay_pwd
             wallet.save()
             return True
@@ -167,3 +185,37 @@ class BackCard(YkBankCard):
         """
         YkBankCard.objects.create(yk_user_id=user_id, yk_id_card=card_id, name=name,
                                   yk_card_name=card_name, yk_card_type=card_type, yk_card_logo=card_logo)
+
+
+# 课程类
+class Lesson(YkLesson):
+    # 查询用户课程
+    def select_class(self, user_id):
+        try:
+            items = YkLesson.objects.filter(yk_user_id=user_id)
+            return items
+        except:
+            return None
+
+    # 添加课程
+    def update_class(self, user_id=None, classname=None, classfile=None, classimg=None, price=None, lessonDescribe=None,
+                     oneSort=None, towSort=None,
+                     classChapter=None, teacherDescribe=None, class_size=None, up_time=None):
+        """"
+        classname课程名称
+        classfile视频文件
+        classimg课程图片
+        price课程价格
+        lessonDescribe课程描述
+        oneSort课程一级分类
+        towSort课程二级分类
+        classChapter课程章节
+        teacherDescribe讲师描述
+        class_size 视频大小
+        up_time  上传时间
+        """
+        YkLesson.objects.create(yk_user_id=user_id, yk_lesson_name=classname, yk_video_jump_link=classfile,
+                                yk_lesson_img=classimg, yk_class_size=class_size,
+                                yk_lesson_price=price, yk_up_time=up_time,
+                                yk_lesson_describe=lessonDescribe, yk_teacher_describe=teacherDescribe,
+                                yk_one_list_id=oneSort, yk_tow_list_id=towSort, yk_course_chapter=classChapter)
