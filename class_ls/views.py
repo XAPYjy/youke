@@ -20,7 +20,7 @@ class SecondclassSerializer(serializers.ModelSerializer):
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = YkLesson
-        fields = ('id','yk_lesson_name','yk_lesson_price','yk_lesson_img','yk_lesson_describe','yk_lesson_price_type','yk_buy_amount','yk_watch_amount','yk_course_chapter')
+        fields = ('id','yk_lesson_name','yk_lesson_price','yk_lesson_img','yk_lesson_describe','yk_lesson_price_type','yk_buy_amount','yk_watch_amount','yk_course_chapter','yk_teacher_describe')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,7 +85,7 @@ def lesson_list(request):
     }
     return Response(result)
 
-
+#根据用户爱好进行模糊推荐
 # @api_view(['GET'])
 # def hobby(request):
 #     data = int(request.GET.get('token'))
