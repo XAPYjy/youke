@@ -137,9 +137,9 @@ class YkFirstclass(models.Model):
 class YkInformation(models.Model):
     yk_nickname = models.CharField(max_length=50, blank=True, null=True)
     yk_name = models.CharField(max_length=50, blank=True, null=True)
-    yk_avatar = models.CharField(max_length=256, blank=True, null=True)
+    yk_avatar = models.TextField(blank=True,null=True)
     yk_sex = models.CharField(max_length=10, blank=True, null=True)
-    yk_age = models.IntegerField(blank=True, null=True)
+    yk_age = models.CharField(max_length=10,blank=True, null=True)
     yk_career = models.CharField(db_column='yk_Career', max_length=50, blank=True,
                                  null=True)  # Field name made lowercase.
     yk_hobby = models.CharField(max_length=50, blank=True, null=True)
@@ -214,10 +214,11 @@ class YkMyClass(models.Model):
 
 
 class YkOrder(models.Model):
-    yk_goods_id = models.IntegerField(blank=True, null=True)
+    yk_goods_id = models.TextField(blank=True, null=True)
     yk_isorderstatus = models.BooleanField(default=False)
     yk_total_price = models.FloatField(blank=True, null=True)
     yk_user_id = models.IntegerField(blank=True, null=True)
+    yk_order_time = models.TimeField(blank=True,null=True)
 
     class Meta:
         managed = False
@@ -256,7 +257,7 @@ class YkSecondclass(models.Model):
 
 
 class YkUser(models.Model):
-    yk_name = models.CharField(max_length=50, blank=True, null=True, verbose_name='账号')
+    yk_name = models.CharField(max_length=50, blank=True, null=True, )
     yk_auto_string = models.CharField(max_length=100, blank=True, null=True, verbose_name='口令')
     yk_emil = models.CharField(max_length=50, blank=True, null=True)
     yk_phone = models.CharField(max_length=20, blank=True, null=True)

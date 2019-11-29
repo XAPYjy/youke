@@ -1,3 +1,5 @@
+import json
+import re
 import time
 
 from rest_framework import viewsets, mixins
@@ -8,14 +10,16 @@ from rest_framework.response import Response
 from tools.bank_card_code import get_bank_info
 from tools.cache_ import add_token, valid_token, remove_token
 from tools.crypo import encode4md5
+from tools.db import delete_user
 from tools.file_dow import file_upload, video_upload
 from tools.integral_level_calculation import compute
 from tools.sms_ import send_code
 from tools.toke_ import new_token
-from ykuser.models import YKUser, InFor, Pack, Recharge, BackCard, Lesson
+from ykuser.models import YKUser, InFor, Pack, Recharge, BackCard, Lesson, Order
 from ykuser.serializers import UserSerializer, UserCheckSerializer, UserLoginSerializer, \
     UserloginCheckSerializer, User_CheckSerializer, PayPwdCheckSerializer, RechargeCheckSerializer, \
-    BillSerializer, BankCardSerializer, CardSerializer, LessonCardSerializer, UpPwdCheckSerializer, ClassCardSerializes
+    BillSerializer, BankCardSerializer, CardSerializer, LessonCardSerializer, UpPwdCheckSerializer, ClassCardSerializes, \
+    OrderCardSerializes
 
 
 class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
@@ -40,29 +44,32 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         except:
             return None
 
-    # def list(self, request, *args, **kwargs):
-    #     user_id = self.token_(request)  # 验证token是否存在
-    #     if not user_id:
-    #         result = {
-    #             "status": 1,
-    #             "msg": "未登录"
-    #         }
-    #         return Response(result)
-    #
-    #     infor = InFor().select_infor_all(userid=user_id)
-    #     if infor:
-    #         result = {
-    #             "status": 0,
-    #             "msg": infor.yk_nickname,
-    #             "head": infor.yk_avater,
-    #         }
-    #         return Response(result)
-    #     else:
-    #         result = {
-    #             "status": 1,
-    #             "msg": "请完善个人资料"
-    #         }
-    #         return Response(result)
+    def list(self, request, *args, **kwargs):
+        user_id = self.token_(request)  # 验证token是否存在
+        if not user_id:
+            result = {
+                "status": 1,
+                "msg": "未登录"
+            }
+            return Response(result)
+
+        infor = InFor().select_infor_all(userid=user_id)
+        pack = Pack().select_pack_all(user_id=user_id)
+        if infor:
+            result = {
+                "status": 0,
+                "msg": infor.yk_nickname,
+                "head": infor.yk_avatar,
+                "integral": pack.yk_integral,
+                "member": pack.yk_member,
+            }
+            return Response(result)
+        else:
+            result = {
+                "status": 1,
+                "msg": "请完善个人资料"
+            }
+            return Response(result)
 
     # 验证码注册
     # 由@action装饰器装饰的方法，方法名作为路径名
@@ -172,7 +179,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             }
             return Response(result)
         phone = ser.data["phone"]
-        flag = ser.data["flag"]  # 登录验证
+        # flag = ser.data["flag"]  # 登录验证
         token = new_token()  # 定义token
         user = YKUser().select_all(phone=phone)
         # 判断如果手机号没有注册，则先进行注册，在登陆
@@ -319,7 +326,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             return Response(result)
 
         try:
-            InFor().save_infor(user_id=int(user_id), nikname=nikname, name=name, head=None,
+            InFor().save_infor(user_id=int(user_id), nikname=nikname, name=name,
                                sex=sex, age=age, career=career, hobby=hobby,
                                signature=signature)
             result = {
@@ -480,7 +487,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
                 # 存储账单信息
                 rech = Recharge().save_recharge(user_id=user_id, pack_id=pack.id, bill_time=time_local, integral=u_part,
-                                                amount=sum_money, paymenType=str(paymenType), transType=str(transType))
+                                                amount=money, paymenType=str(paymenType), transType=str(transType))
                 if rech:
                     print("账单生成成功······")
                 else:
@@ -636,16 +643,23 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     # 测试文件上传
     @action(methods=["post"], detail=False)
     def file(self, request):
-        if request.FILES:
-            image = request.FILES.getlist('up_file')[0]  # 拿到上传文件
-            if not image:
-                return Response({"msg": "接受文件为空"})
-            print(image, "=====================")
-            print(image.file)
-            print(image.name)
-            print(image.content_type)
-            file_url = file_upload(image)
-            return Response({"msg": "接受文件成功", "url": file_url})
+        # bytes = request.read()
+        # json_data = json.loads(bytes.decode('utf-8'))
+        # with open(r"C:\Users\Administrator\Desktop\abv.jpg", "wb") as f:
+        #     f.write(bytes)
+        # print(bytes)
+        # # print(json_data.get())
+        print(request.data)
+        # print(request.data["head"])
+        file = request.data["head"]
+        print(file)
+        # image = request.FILES.getlist('up_file')[0]  # 拿到上传文件
+        if not file:
+            return Response({"msg": "接受文件为空"})
+        print(file.content_type)
+        file_url = file_upload(file)
+        print(file_url)
+        return Response({"msg": "接受文件成功", "url": file_url})
 
     # 视频上传接口上传
     @action(methods=["post"], detail=False, serializer_class=LessonCardSerializer)
@@ -668,17 +682,17 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             }
             return Response(result)
 
-        classname = ser.data["classname"]  # 课程名称
-        classfile = request.FILES.getlist("classfile")[0]  # 视频文件
-        classimg = request.FILES.getlist("classimg")[0]  # 课程图片
-        price = ser.data["price"]  # 课程价格
-        lessonDescribe = ser.data["lessonDescribe"]  # 课程描述
-        oneSort = ser.data["oneSort"]  # 课程一级分类
-        towSort = ser.data["towSort"]  # 课程二级分类
-        classChapter = ser.data["classChapter"]  # 课程章节
-        teacherDescribe = ser.data["teacherDescribe"]  # 讲师描述
+        # classname = ser.data["classname"]  # 课程名称
+        classfile = request.data["classfile"]  # 视频文件
+        # classimg = request.FILES.getlist("classimg")[0]  # 课程图片
+        # price = ser.data["price"]  # 课程价格
+        # lessonDescribe = ser.data["lessonDescribe"]  # 课程描述
+        # oneSort = ser.data["oneSort"]  # 课程一级分类
+        # towSort = ser.data["towSort"]  # 课程二级分类
+        # classChapter = ser.data["classChapter"]  # 课程章节
+        # teacherDescribe = ser.data["teacherDescribe"]  # 讲师描述
         # 判断文件是否上传
-        if not classfile or (not classimg):
+        if not classfile:
             result = {
                 "code": 900,
                 "msg": "请选择图片或视频文件！"
@@ -686,7 +700,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             return Response(result)
         try:
             class_items = video_upload(classfile)  # 存储视频文件
-            classimg_items = video_upload(classimg)  # 储存视频图片
+            # classimg_items = video_upload(classimg)  # 储存视频图片
         except:
             result = {
                 "code": 900,
@@ -694,21 +708,22 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             }
             return Response(result)
         # 判断视频的格式
-        if not class_items or (not classimg_items):
-            result = {
-                "code": 900,
-                "msg": "图片或视频文件格式错误！"
-            }
-            return Response(result)
+        # if not class_items or (not classimg_items):
+        #     result = {
+        #         "code": 900,
+        #         "msg": "图片或视频文件格式错误！"
+        #     }
+        #     return Response(result)
         video_path = class_items["video_path"]
         class_size = class_items["class_size"]
         up_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         try:
             print(video_path)
-            Lesson().update_class(user_id=user_id, classname=classname, classfile=video_path, classimg=classimg_items,
-                                  price=price, lessonDescribe=lessonDescribe, oneSort=oneSort, class_size=class_size,
-                                  towSort=towSort, classChapter=classChapter, teacherDescribe=teacherDescribe,
-                                  up_time=up_time)
+            Lesson().update_class(user_id=user_id, classfile=video_path, class_size=class_size, up_time=up_time
+                                  # classimg=classimg_items,classname=classname,
+                                  # price=price, lessonDescribe=lessonDescribe, oneSort=oneSort,
+                                  # towSort=towSort, classChapter=classChapter, teacherDescribe=teacherDescribe,
+                                  )
             result = {
                 "status": 0,
                 "msg": "上传成功！"
@@ -731,33 +746,35 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
                 "msg": "你还没有登陆，请登陆！"
             }
             return Response(result)
-
-        if request.FILES:
-            image = request.FILES.getlist('head')[0]  # 拿到上传文件
-            print(image)
-            if not image:
-                result = {
-                    "status": 1,
-                    "msg": "上传头像为空"
-                }
-                return Response(result)
-            try:
-                file_url = file_upload(image)
-                print(file_url)
-                InFor().up_head(user_id=user_id, head_img=file_url)
-                result = {
-                    "status": 0,
-                    "msg": "上传成功",
-                    "head": file_url
-                }
-                return Response(result)
-            except Exception as e:
-                result = {
-                    "code": 900,
-                    "msg": "上传异常"
-                }
-                print(e)
-                return Response(result)
+        # image = request.FILES.get("head")
+        # print(request.data)
+        # image_uel = request.data["head"]
+        image = request.data["content"]
+        # image = request.FILES.getlist('head')[0]  # 拿到上传文件
+        print(image)
+        if not image:
+            result = {
+                "status": 1,
+                "msg": "上传头像为空"
+            }
+            return Response(result)
+        try:
+            # file_url = file_upload(image)
+            # print(file_url)
+            InFor().up_head(user_id=user_id, head_img=image)
+            result = {
+                "status": 0,
+                "msg": "上传成功",
+                "head": image
+            }
+            return Response(result)
+        except Exception as e:
+            result = {
+                "code": 900,
+                "msg": "上传异常"
+            }
+            print(e)
+            return Response(result)
 
     # 修改登录密码
     @action(methods=["post"], detail=False, serializer_class=UpPwdCheckSerializer)
@@ -818,7 +835,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             return Response(result)
         else:
             result = {
-                "status": 0,
+                "status": 1,
                 "msg": "退出失败"
             }
             return Response(result)
@@ -848,3 +865,39 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             "msg": "查询异常！"
         }
         return Response(result)
+
+    # 我的订单
+    @action(methods=["get"], detail=False, serializer_class=OrderCardSerializes)
+    def order(self, request):
+        user_id = self.token_(request)  # 验证token是否存在
+        if not user_id:
+            result = {
+                "status": 1,
+                "msg": "你还没有登陆，请登陆！"
+            }
+            return Response(result)
+
+        orders_dict = Order().select_all(user_id=user_id)
+        result = {
+            "status": 0,
+            "msg": "订单查询成功",
+            "data": {
+
+            }
+        }
+        for key, value in orders_dict.items():
+            v = value["goods_id"].lstrip("[").rstrip("]").split(",")
+            lesson = Lesson().order_select(v)
+            ser = self.get_serializer(lesson, many=True)
+            result["data"][key] = {
+                "total_price": value["total_price"],  # 总价格
+                "order_time": value["order_time"],  # 提交订单的时间
+                "isorderstatus": value["isorderstatus"],  # 是否结算
+                "goods": ser.data  # 课程详情
+            }
+
+        return Response(result)
+
+        # 我的订单
+
+

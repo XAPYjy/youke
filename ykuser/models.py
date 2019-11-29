@@ -1,6 +1,6 @@
 from django.db.models import Q
 
-from yk_models.models import YkUser, YkInformation, YkWallet, YkBillingDetails, YkBankCard, YkLesson
+from yk_models.models import YkUser, YkInformation, YkWallet, YkBillingDetails, YkBankCard, YkLesson, YkOrder
 
 
 # 用户类
@@ -31,8 +31,8 @@ class InFor(YkInformation):
         except:
             return None
 
-    def save_infor(self, user_id, nikname=None, name=None, head=None, sex=None,
-                   age=0, career=None, hobby=None, signature=None):
+    def save_infor(self, user_id, nikname=None, name=None,sex=None,
+                   age=None, career=None, hobby=None, signature=None):
         """
         :param nikname: 昵称
         :param name: 真实姓名
@@ -48,11 +48,11 @@ class InFor(YkInformation):
         # 判断用户资料是否存在，存在更新，不存在新增
         if self.select_infor_all(user_id):
             infor_update = YkInformation.objects.filter(yk_user_id=user_id)
-            infor_update.update(yk_nickname=nikname, yk_name=name, yk_avatar=head,
+            infor_update.update(yk_nickname=nikname, yk_name=name,
                                 yk_sex=sex, yk_age=age, yk_career=career, yk_hobby=hobby,
                                 yk_signature=signature, yk_user_id=user_id)
         else:
-            YkInformation.objects.create(yk_nickname=nikname, yk_name=name, yk_avatar=head,
+            YkInformation.objects.create(yk_nickname=nikname, yk_name=name,
                                          yk_sex=sex, yk_age=age, yk_career=career, yk_hobby=hobby,
                                          yk_signature=signature, yk_user_id=user_id)
 
@@ -219,3 +219,29 @@ class Lesson(YkLesson):
                                 yk_lesson_price=price, yk_up_time=up_time,
                                 yk_lesson_describe=lessonDescribe, yk_teacher_describe=teacherDescribe,
                                 yk_one_list_id=oneSort, yk_tow_list_id=towSort, yk_course_chapter=classChapter)
+
+    def order_select(self, lesson_id):
+        try:
+            orders = YkLesson.objects.filter(id__in=lesson_id)
+            return orders
+        except:
+            print("订单查询错误")
+            return None
+
+
+class Order(YkOrder):
+    def select_all(self, user_id):
+        try:
+            items = YkOrder.objects.filter(yk_user_id=user_id)
+            good_id_dict = {}
+            for item in items:
+                good_id_dict[item.id] = {
+                    "goods_id": item.yk_goods_id,
+                    "total_price": item.yk_total_price,
+                    "order_time": item.yk_order_time,
+                    "isorderstatus": item.yk_isorderstatus
+                }
+            return good_id_dict
+        except:
+            print("查询异常")
+            return None
