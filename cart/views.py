@@ -69,13 +69,26 @@ def get_cart(request):
 def buy_lesson(request):
     if request.method == 'POST':
         json_data = req2json(request)
+        if json_data == 1:
+            result = {
+                'error':2,
+                'msg':'没有课程数据，不能点击购买！'
+            }
+            return JsonResponse(result)
+
         token = json_data.get('token')  # token验证用户的登陆状态
         print('token', token)
-        pids = json_data.get('pid').split(",")
+
         if not token:
             return JsonResponse({
                 'code': 1,
                 'msg': '未登录,请重新登陆'})
+        pids = list(json_data.get('pid'))
+        if not pids:
+            return JsonResponse({
+                'code': 3,
+                'msg': '未选择商品是不能点击购买的吆~~~'
+            })
         user_id = valid_token(token)
         carts = YkOrder.objects.filter(yk_user_id=user_id).values_list('yk_goods_id')
         order_list = []
@@ -114,6 +127,7 @@ def buy_lesson(request):
             'error': 2,
             'msg': '请求方式不对，请正确访问！！！'
         }
+
     return JsonResponse(result)
 
 
