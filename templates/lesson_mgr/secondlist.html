@@ -12,11 +12,11 @@
         <thead>
         <tr class="info">
             <th class="text-center">id</th>
-            <th class="text-center">secondid</th>
-            <th class="text-center">secondname</th>
-            <th class="text-center">firstid</th>
-            <th class="text-center">image</th>
-            <th class="text-center">url</th>
+            <th class="text-center">二级分类ID</th>
+            <th class="text-center">二级分类名</th>
+            <th class="text-center">一级分类ID</th>
+            <th class="text-center">图片</th>
+            <th class="text-center">地址</th>
             <th class="text-center" width="200px">操作</th>
         </tr>
         </thead>
@@ -42,6 +42,22 @@
         {% endfor %}
         </tbody>
     </table>
+    <center>
+        <a href="{% url 'bk:ld' 1 %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">首页</button></a>
+        {% if secondlist.has_previous %}
+            <a href="{% url 'bk:ld' secondlist.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是首页了！！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% endif %}
+
+        {% if secondlist.has_next %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:ld' secondlist.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% endif %}
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:ld' paginator.num_pages %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">末页</button></a>
+    </center>
 
     <!--添加-->
     <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">
@@ -99,11 +115,15 @@
                     <div class="modal-body">
                         <ul>
                             <li>
-                                <label><span>二级分类ID ：</span></label>
+                                <label><span>ID ：</span></label>
+                                <input id="edit_id" type="text" name="second_id" />
+                            </li>
+                            <li>
+                                <label><span>二级分类ID：</span></label>
                                 <input id="edit_secondid" type="text" name="secondlist_id" />
                             </li>
                             <li>
-                                <label><span>二级分类名 ：</span></label>
+                                <label><span>二级分类名：</span></label>
                                 <input id="edit_name" type="text" name="name"/>
                             </li>
                             <li>
@@ -155,7 +175,8 @@
 
 {% block js %}
     <script>
-        function edit(yk_secondclassid, yk_secondclassname,yk_firstclassid,secondimage,secondurl) {
+        function edit(id,yk_secondclassid, yk_secondclassname,yk_firstclassid,secondimage,secondurl) {
+            $('#edit_id').val(id);
             $('#edit_secondid').val(yk_secondclassid);
             $('#edit_name').val(yk_secondclassname);
             $('#edit_firstid').val(yk_firstclassid);
@@ -164,9 +185,9 @@
             $('#edit').modal('show');
         }
 
-        var second_id = 0;
-        function delete_secondlist(secondid, secondlist_name) {
-            second_id = secondid;
+        var secondlist_id = 0;
+        function delete_secondlist(secondlistid, secondlist_name) {
+            secondlist_id = secondlistid;
             $('#msg').html('是否删除 '+ secondlist_name+" ?");
             $('#info').modal('toggle');
         }

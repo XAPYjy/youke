@@ -16,10 +16,10 @@ class YKUser(YkUser):
         except:
             return None
 
-    def up_pwd(self, user_id, up_pwd):
-        users = YKUser.objects.filter(id=user_id)
-        users.yk_auto_string = up_pwd
-        users.save()
+    # def up_pwd(self, user_id, up_pwd):
+    #     users = YKUser.objects.filter(id=user_id).first()
+    #     users.yk_auto_string = up_pwd
+    #     users.save()
 
 
 # 个人资料类
@@ -135,7 +135,7 @@ class Recharge(YkBillingDetails):
             return None
 
     def save_recharge(self, user_id, pack_id, bill_time=None, amount=None,
-                      integral=None, paymenType=None, transType=None):
+                      integral=0, paymenType=None, transType=None):
         """
         :param user_id: 用户id
         :param pack_id: 钱包id
@@ -229,6 +229,7 @@ class Lesson(YkLesson):
             return None
 
 
+# 订单显示
 class Order(YkOrder):
     def select_all(self, user_id):
         try:

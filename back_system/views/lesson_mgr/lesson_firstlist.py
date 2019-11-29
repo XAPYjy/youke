@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
@@ -7,17 +8,23 @@ from yk_models.models import *
 
 
 class LessonFirstView(View):
-    def get(self, request):
+    def get(self, request,pagenumber=1):
         if request.GET.get('id',''):
             firstlist = YkFirstclass.objects.get(pk=request.GET.get('id'))
             print('firstlist=',firstlist)
             return JsonResponse({
                 'id':firstlist.id,
-                'firstid':firstlist.yk_firstclassid,
-                'firstname':firstlist.yk_firstclassname
+                'yk_firstclassid':firstlist.yk_firstclassid,
+                'yk_firstclassname':firstlist.yk_firstclassname
             })
-            firstlists =YkFirstclass.objects.all()
-            print('firstlists=',firstlists)
+
+        firstlists = YkFirstclass.objects.all()
+        paginator = Paginator(firstlists, 8)  # 每页最多显示8条数据
+        if pagenumber > paginator.num_pages:
+            pagenumber -= 1
+        if pagenumber < 1:
+            pagenumber += 1
+            firstlists = paginator.page(pagenumber)
         return render(request, 'lesson_mgr/firstlist.html', locals())
 
     def post(self, request:HttpResponse):
@@ -27,7 +34,6 @@ class LessonFirstView(View):
         # 验证是否为空（建议：页面上验证）
         if id:
             # 更新
-
             firstlist = YkFirstclass.objects.get(pk=id)
             firstlist.yk_firstclassid = firstid
             firstlist.yk_firstclassname = firstname

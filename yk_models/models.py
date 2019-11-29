@@ -16,7 +16,7 @@ class Bags(models.Model):
     yk_user_id = models.IntegerField()      # 用户id
     yk_price = models.FloatField()          # 价格
     # yk_num = models.IntegerField()          # 单个商品的购买数量
-    yk_time = models.TimeField()            # 购买时间
+    yk_time = models.CharField(max_length=50,null=True)            # 购买时间
     # yk_is_selected = models.BooleanField(default=True)  # 购物车记录的选中状态
     yk_video_progress = models.FloatField()
     class Meta:
@@ -214,11 +214,12 @@ class YkMyClass(models.Model):
 
 
 class YkOrder(models.Model):
-    yk_goods_id = models.TextField(blank=True, null=True)
+
+    yk_goods_id = models.TextField()
     yk_isorderstatus = models.BooleanField(default=False)
     yk_total_price = models.FloatField(blank=True, null=True)
     yk_user_id = models.IntegerField(blank=True, null=True)
-    yk_order_time = models.TimeField(blank=True,null=True)
+    yk_order_time = models.CharField(max_length=50,blank=True,null=True)
 
     class Meta:
         managed = False

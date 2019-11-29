@@ -24,9 +24,9 @@ def to_str(value:str):
 
 @register.filter(is_safe=True)
 def to_img_tag(value:str):
-    if value.endswith('.jpg') or value.endswith('.JPG') or value.endswith('.png') or value.endswith('jpeg') or value.startswith("http:"):
-        return mark_safe('<td style="width:120px"><img width="120px" height="100px" src="%s" > </td>' % value)
+    if value.endswith('.jpg') or value.endswith('.jpgjpg') or value.endswith('.JPG') or value.endswith('.png') or value.endswith('jpeg') or value.startswith("http:"):
+        return mark_safe('<img width="120px" height="100px" src="%s" >' % value)
 
-    return mark_safe("<td>%s</td>" % value)
+    return mark_safe("%s" % value)
 
 

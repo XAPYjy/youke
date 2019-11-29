@@ -36,6 +36,23 @@
         {% endfor %}
         </tbody>
     </table>
+    <center>
+        <a href="{% url 'bk:uo' 1 %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">首页</button></a>
+        {% if secondlist.has_previous %}
+            <a href="{% url 'bk:uo' order.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是首页了！！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% endif %}
+
+        {% if order.has_next %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:uo' order.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% else %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% endif %}
+
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:uo' order.num_pages %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">末页</button></a>
+    </center>
+
 
     <!--添加-->
 {#    <div class="modal fade" id="add1" tabindex="-1" role="dialog" aria-labelledby="add11">#}

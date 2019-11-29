@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from tools.bank_card_code import get_bank_info
 from tools.cache_ import add_token, valid_token, remove_token
 from tools.crypo import encode4md5
-from tools.db import delete_user
+from tools.db import update_pwd
 from tools.file_dow import file_upload, video_upload
 from tools.integral_level_calculation import compute
 from tools.sms_ import send_code
@@ -672,18 +672,19 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             }
             return Response(result)
 
-        ser = self.get_serializer(data=request.data)  # 接收请求体中的参数，并将其封装到@action设置的序列化类对象中
-        try:
-            ser.is_valid(raise_exception=True)  # 会触发序列化对象的验证，包括格式验证和逻辑验证
-        except APIException as e:
-            result = {
-                "code": 901,
-                "msg": e.detail
-            }
-            return Response(result)
-
+        # ser = self.get_serializer(data=request.data)  # 接收请求体中的参数，并将其封装到@action设置的序列化类对象中
+        # try:
+        #     ser.is_valid(raise_exception=True)  # 会触发序列化对象的验证，包括格式验证和逻辑验证
+        # except APIException as e:
+        #     result = {
+        #         "code": 901,
+        #         "msg": e.detail
+        #     }
+        #     return Response(result)
+        print(request.data, "||||||||||||||||||||||")
         # classname = ser.data["classname"]  # 课程名称
         classfile = request.data["classfile"]  # 视频文件
+        print(classfile,"=========================")
         # classimg = request.FILES.getlist("classimg")[0]  # 课程图片
         # price = ser.data["price"]  # 课程价格
         # lessonDescribe = ser.data["lessonDescribe"]  # 课程描述
@@ -695,12 +696,13 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         if not classfile:
             result = {
                 "code": 900,
-                "msg": "请选择图片或视频文件！"
+                "msg": "请选择视频文件！"
             }
             return Response(result)
         try:
             class_items = video_upload(classfile)  # 存储视频文件
             # classimg_items = video_upload(classimg)  # 储存视频图片
+            print(class_items)
         except:
             result = {
                 "code": 900,
@@ -726,7 +728,8 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
                                   )
             result = {
                 "status": 0,
-                "msg": "上传成功！"
+                "msg": "上传成功！",
+                "video_path": video_path
             }
             return Response(result)
         except:
@@ -798,9 +801,10 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             return Response(result)
         pwd = ser.data["pwd"]
         up_pwd = ser.data["up_pwd"]
-        make_pwd = encode4md5(pwd)
-        user_pwd = YKUser().select_all(pwd=make_pwd)
-        if not user_pwd:
+        pwd_ = encode4md5(pwd)
+        user_pwd = YKUser().select_all(id=user_id).yk_auto_string
+        print(user_pwd)
+        if pwd_ != user_pwd:
             result = {
                 "code": 901,
                 "msg": "旧密码错误"
@@ -808,14 +812,15 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             return Response(result)
         make_up_pwd = encode4md5(up_pwd)  # 加密密码
         # 判断储存是否成功
-        try:
-            YKUser().up_pwd(user_id=user_id, up_pwd=make_up_pwd)
+        user = update_pwd(user_id=user_id, up_pwd=make_up_pwd)
+        if user:
+            # YKUser().up_pwd(user_id=user_id, up_pwd=make_up_pwd)
             result = {
                 "status": 0,
                 "msg": "设置成功！",
             }
             return Response(result)
-        except:
+        else:
             result = {
                 "code": 900,
                 "status": 1,
@@ -824,21 +829,20 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             return Response(result)
 
     # 退出
-    @action(methods=["get"], detail=False)
+    @action(methods=["post"], detail=False)
     def d_exit(self, request):
         token = request.data.get("token") if request.data.get("token") else request.query_params.get("token")
-        if remove_token(token):
-            result = {
-                "status": 0,
-                "msg": "退出成功"
-            }
-            return Response(result)
-        else:
-            result = {
-                "status": 1,
-                "msg": "退出失败"
-            }
-            return Response(result)
+        print(token)
+        if token:
+            token_ = remove_token(token)
+            print(token_)
+            if token_:
+                print("已退出")
+                return Response({"msg": "已退出"})
+            else:
+                print("退出失败")
+                return Response({"msg": "退出失败"})
+        return Response({"msg": "退出异常"})
 
     # 我的课程查询
     @action(methods=["get"], detail=False, serializer_class=ClassCardSerializes)
@@ -899,5 +903,3 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         return Response(result)
 
         # 我的订单
-
-
