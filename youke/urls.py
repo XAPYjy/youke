@@ -37,7 +37,13 @@ urlpatterns = [
     path('youke/', include(router_user.urls)),  # 我的页面路由
     path('video/', include("video_rtmp.urls")),  # 课程视频路由
     path('cart/',include('cart.urls')),
+<<<<<<< HEAD
 
 ]
+=======
+    path('gate/',include('class_ls.urls'))
+
+    ]
+>>>>>>> 7c7e28ee0ce95810bdc62bb92398d2f6484fb269
 
 

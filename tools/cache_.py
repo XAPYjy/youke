@@ -9,7 +9,8 @@ def add_token(token, user_id):
 def remove_token(token):
     # 退出时删除token
     op = rd.delete(token)
-    if op == 1:
+    print(type(op),"==============")
+    if op:
         return True
     else:
         return False

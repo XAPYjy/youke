@@ -15,7 +15,7 @@ class Bags(models.Model):
     yk_user_id = models.IntegerField()      # 用户id
     yk_price = models.FloatField()          # 价格
     # yk_num = models.IntegerField()          # 单个商品的购买数量
-    yk_time = models.TimeField()            # 购买时间
+    yk_time = models.CharField(max_length=50,null=True)            # 购买时间
     # yk_is_selected = models.BooleanField(default=True)  # 购物车记录的选中状态
     yk_video_progress = models.FloatField()
     class Meta:
@@ -136,9 +136,9 @@ class YkFirstclass(models.Model):
 class YkInformation(models.Model):
     yk_nickname = models.CharField(max_length=50, blank=True, null=True)
     yk_name = models.CharField(max_length=50, blank=True, null=True)
-    yk_avatar = models.CharField(max_length=256, blank=True, null=True)
+    yk_avatar = models.TextField(blank=True,null=True)
     yk_sex = models.CharField(max_length=10, blank=True, null=True)
-    yk_age = models.IntegerField(blank=True, null=True)
+    yk_age = models.CharField(max_length=10,blank=True, null=True)
     yk_career = models.CharField(db_column='yk_Career', max_length=50, blank=True,
                                  null=True)  # Field name made lowercase.
     yk_hobby = models.CharField(max_length=50, blank=True, null=True)
@@ -213,10 +213,12 @@ class YkMyClass(models.Model):
 
 
 class YkOrder(models.Model):
-    yk_goods_id = models.IntegerField(blank=True, null=True)
+
+    yk_goods_id = models.TextField()
     yk_isorderstatus = models.BooleanField(default=False)
     yk_total_price = models.FloatField(blank=True, null=True)
     yk_user_id = models.IntegerField(blank=True, null=True)
+    yk_order_time = models.CharField(max_length=50,blank=True,null=True)
 
     class Meta:
         managed = False
@@ -261,7 +263,7 @@ class UserManager(models.Manager):
 
 
 class YkUser(models.Model):
-    yk_name = models.CharField(max_length=50, blank=True, null=True, verbose_name='账号')
+    yk_name = models.CharField(max_length=50, blank=True, null=True, )
     yk_auto_string = models.CharField(max_length=100, blank=True, null=True, verbose_name='口令')
     yk_emil = models.CharField(max_length=50, blank=True, null=True)
     yk_phone = models.CharField(max_length=20, blank=True, null=True)
