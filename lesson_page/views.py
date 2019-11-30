@@ -4,19 +4,13 @@ import time
 from django.http import JsonResponse
 
 from lesson_page.models import *
-<<<<<<< HEAD
 # from util.cache_ import valid_token
-=======
->>>>>>> 7c7e28ee0ce95810bdc62bb92398d2f6484fb269
 from tools.cache_ import valid_token
 from tools.request2json import req2json
 from yk_models.models import YkOrder, Bags
-<<<<<<< HEAD
-=======
 
 from tools.cache_ import valid_token
 from yk_models.models import YkOrder, Bags,YkWallet
->>>>>>> 7c7e28ee0ce95810bdc62bb92398d2f6484fb269
 
 
 def detail_view(request):

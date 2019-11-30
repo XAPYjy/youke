@@ -1,9 +1,6 @@
-<<<<<<< HEAD
-=======
 import pymysql
 
 
->>>>>>> 7c7e28ee0ce95810bdc62bb92398d2f6484fb269
 def get_conn():
     conn = pymysql.connect(
         host="47.92.132.161",
@@ -15,7 +12,6 @@ def get_conn():
     return conn
 
 
-<<<<<<< HEAD
 def delete_user(user_id):
     conn =get_conn()
     cursor = conn.cursor()
@@ -25,7 +21,6 @@ def delete_user(user_id):
 
 if __name__ == '__main__':
     delete_user(4)
-=======
 # def delete_user(user_id):
 # #     conn =get_conn()
 # #     cursor = conn.cursor()
@@ -48,4 +43,3 @@ def update_pwd(user_id,up_pwd):
         cursor.close()
         conn.close()
 
->>>>>>> 7c7e28ee0ce95810bdc62bb92398d2f6484fb269
