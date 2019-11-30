@@ -6,7 +6,6 @@ MAINTAINER cys
 WORKDIR /usr/src/
 ## 从Git上克隆文件到项目的目标地址中
 ADD . /usr/src/youke
-## RUN git clone git@github.com:XAPYjy/youke.git
 ## 做一个数据卷, 将上面的目录映射出去(地址暴露出去)
 WORKDIR /usr/src/youke
 VOLUME /usr/src/youke
