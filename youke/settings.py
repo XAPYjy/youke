@@ -48,7 +48,11 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'back_system.middleware.valid_login',
+<<<<<<< HEAD
+    # 'back_system.middleware.valid_login',
+=======
+    #'back_system.middleware.valid_login',
+>>>>>>> 5af8191086c7f85c16f5e7214ddeaa0ed10b3110
     'django.middleware.common.CommonMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

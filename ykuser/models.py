@@ -25,6 +25,7 @@ class YKUser(YkUser):
         managed = False
         db_table = 'yk_user'
 
+
 # 个人资料类
 class InFor(YkInformation):
     def select_infor_all(self, userid):
@@ -34,7 +35,7 @@ class InFor(YkInformation):
         except:
             return None
 
-    def save_infor(self, user_id, nikname=None, name=None,sex=None,
+    def save_infor(self, user_id, nikname=None, name=None, sex=None,
                    age=None, career=None, hobby=None, signature=None):
         """
         :param nikname: 昵称
