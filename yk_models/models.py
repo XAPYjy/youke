@@ -7,7 +7,6 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 
-
 # 柚子树
 class Bags(models.Model):
     yk_goods_type = models.BooleanField()   # 购物车状态(已购,未购)
@@ -255,12 +254,24 @@ class YkSecondclass(models.Model):
         db_table = 'yk_secondClass'
 
 
+class UserManager(models.Manager):
+    def get_queryset(self):
+        qs = super(UserManager, self).get_queryset()
+        return qs.filter(sys_auth=1)
+
+
 class YkUser(models.Model):
     yk_name = models.CharField(max_length=50, blank=True, null=True, verbose_name='账号')
     yk_auto_string = models.CharField(max_length=100, blank=True, null=True, verbose_name='口令')
     yk_emil = models.CharField(max_length=50, blank=True, null=True)
     yk_phone = models.CharField(max_length=20, blank=True, null=True)
     sys_auth = models.IntegerField(blank=True, null=True)
+
+    objects = UserManager()
+
+    def delete(self, using=None, keep_parents=False):
+        self.sys_auth = 0
+        self.save()
 
     class Meta:
         managed = False

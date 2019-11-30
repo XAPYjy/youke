@@ -7,6 +7,8 @@ from cart.urls import *
 from ykuser.urls import router_user
 
 # 显示头像图片
+
+
 def image_head_view(request, image):
     UPLOAD_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 返回到上级目录
     imagepath = os.path.join(UPLOAD_DIR, "statics/head", image)  # 拼接上传文件的最终路径
@@ -34,7 +36,8 @@ urlpatterns = [
     path('video_img/<image_url>/', image_video_view),  # 查看视频图片路由
     path('youke/', include(router_user.urls)),  # 我的页面路由
     path('video/', include("video_rtmp.urls")),  # 课程视频路由
-    path('cart/',include('cart.urls'))
-    ]
+    path('cart/',include('cart.urls')),
+
+]
 
 

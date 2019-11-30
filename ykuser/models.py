@@ -21,6 +21,9 @@ class YKUser(YkUser):
         users.yk_auto_string = up_pwd
         users.save()
 
+    class Meta:
+        managed = False
+        db_table = 'yk_user'
 
 # 个人资料类
 class InFor(YkInformation):

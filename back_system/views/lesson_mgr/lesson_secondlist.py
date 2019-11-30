@@ -21,16 +21,19 @@ class LessonSecondView(View):
             })
         secondlists = YkSecondclass.objects.all()
         paginator = Paginator(secondlists, 8)  # 每页最多显示8条数据
+        print(paginator.num_pages)
         if pagenumber > paginator.num_pages:
+
             pagenumber -= 1
         if pagenumber < 1:
             pagenumber += 1
-            firstlists = paginator.page(pagenumber)
+        secondlists = paginator.page(pagenumber)
+
         return render(request, 'lesson_mgr/secondlist.html', locals())
 
     def post(self, request:HttpResponse):
-        id = request.POST.get("second_id",None)
-        secondid = request.POST.get("secondlist_id",None)
+        id = request.POST.get("secondlist_id",None)
+        secondid = request.POST.get("second_id",None)
         name = request.POST.get("name")
         first_id = request.POST.get("first_id")
         image = request.POST.get("image")
