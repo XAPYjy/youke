@@ -30,3 +30,6 @@ def to_img_tag(value:str):
     return mark_safe("%s" % value)
 
 
+@register.filter(is_safe=True)
+def spilt_url(value:str):
+    return value.split('/')[-2]

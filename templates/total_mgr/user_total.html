@@ -7,7 +7,7 @@
     {% endblock %}
 
     {% block content %}
-        <div style="width:550px;height:600px;float:left;background-color: whitesmoke" id="chartmain">
+        <div style="width:480px;height:500px;float:left;background-color: whitesmoke" id="chartmain">
             <script src="/s/js/echarts.js"></script>
             <script type="text/javascript">
                 var myChart = echarts.init(document.getElementById('chartmain'));
@@ -76,9 +76,7 @@
                 myChart.setOption(option);
             </script>
         </div>
-        <div style="width: 10px"></div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <div style="width:600px;height:600px;float:right;background-color: whitesmoke" id="chartmain1">
+        <div style="width:480px;height:500px;float:right;background-color: whitesmoke" id="chartmain1">
             <script src="/s/js/echarts.js"></script>
             <script type="text/javascript">
                 var myChart1 = echarts.init(document.getElementById('chartmain1'));

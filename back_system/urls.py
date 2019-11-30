@@ -1,4 +1,6 @@
 from django.urls import path
+
+from back_system.views.lesson_mgr.play_video import play_video
 from back_system.views.sys_mgr.sys_mgr_user import SUserView
 from back_system.views.sys_mgr.sys_mgr_role import SRoleView
 from back_system.views.user_mgr.user_order import UserOrderView
@@ -34,7 +36,9 @@ urlpatterns = [
     path('tlesson/', TotalLessonView.as_view(),name='tl'),
     path('torder/',TotalOrderView.as_view(), name='to'),
     path('tuser/',TotalUserView.as_view(),name='tu' ),
-    path('init_es/', ESView.as_view()),
     path('upload_log/', ESLogView.as_view()),
     path('base/',BaseView.as_view()),
+    path('init_es/', ESView.as_view()),
+    path('video/<video_url>/', play_video),
+
 ]

@@ -5,7 +5,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler, HTTPHandler, SMTPHandler
 from logging import StreamHandler, FileHandler
 
-from common.handler_ import ESHandler
+# from common.handler_ import ESHandler
 
 # 获取日志记录器
 logger = logging.getLogger('user_action')
@@ -28,15 +28,15 @@ handler3 = FileHandler('error.log', encoding='utf-8')
 handler3.setLevel(logging.ERROR)
 handler3.setFormatter(formatter)
 
-handler4 = ESHandler()
+# handler4 = ESHandler()
 
-handler4.setLevel(logging.INFO)
-handler4.setFormatter(formatter)
+# handler4.setLevel(logging.INFO)
+# handler4.setFormatter(formatter)
 
 logger.addHandler(handler1)  # 将日志处理器添加到记录器中
 logger.addHandler(handler2)
 logger.addHandler(handler3)
-logger.addHandler(handler4)
+# logger.addHandler(handler4)
 
 
 def test_all_msg():

@@ -16,14 +16,13 @@ class UserOrderView(View):
                 'total_price':order.yk_total_price,
                 'user_id':order.yk_user_id,
             })
-
         orders = YkOrder.objects.all()
         paginator = Paginator(orders, 8)  # 每页最多显示8条数据
         if pagenumber > paginator.num_pages:
             pagenumber -= 1
         if pagenumber < 1:
             pagenumber += 1
-            firstlists = paginator.page(pagenumber)
+        orders = paginator.page(pagenumber)
         return render(request, 'user_mgr/order.html', locals())
 
     def delete(self, request):
