@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from tools.bank_card_code import get_bank_info
 from tools.cache_ import add_token, valid_token, remove_token
 from tools.crypo import encode4md5
-from tools.db import update_pwd
+from tools.db import update_pwd, update_phone
 from tools.file_dow import file_upload, video_upload
 from tools.integral_level_calculation import compute
 from tools.sms_ import send_code
@@ -684,7 +684,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         print(request.data, "||||||||||||||||||||||")
         # classname = ser.data["classname"]  # 课程名称
         classfile = request.data["classfile"]  # 视频文件
-        print(classfile,"=========================")
+        print(classfile, "=========================")
         # classimg = request.FILES.getlist("classimg")[0]  # 课程图片
         # price = ser.data["price"]  # 课程价格
         # lessonDescribe = ser.data["lessonDescribe"]  # 课程描述
@@ -828,6 +828,41 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             }
             return Response(result)
 
+    # 修改手机号
+    @action(methods=["post"], detail=False)
+    def up_phone(self, request):
+        user_id = self.token_(request)  # 验证token是否存在
+        if not user_id:
+            result = {
+                "status": 1,
+                "msg": "你还没有登陆，请登陆！"
+            }
+            return Response(result)
+        # 获取请求中的参数
+        try:
+            phone = request.data["phone"]
+        except:
+            result = {
+                "status": 2,
+                "msg": "参数异常！",
+            }
+            return Response(result)
+        # 更改手机号
+        user = update_phone(user_id=user_id, phone=phone)
+        if user:
+            result = {
+                "status": 0,
+                "msg": "设置成功！",
+            }
+            return Response(result)
+        else:
+            result = {
+                "code": 900,
+                "status": 1,
+                "msg": "重置异常！"
+            }
+            return Response(result)
+
     # 退出
     @action(methods=["post"], detail=False)
     def d_exit(self, request):
@@ -893,7 +928,8 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             v = value["goods_id"].lstrip("[").rstrip("]").split(",")
             lesson = Lesson().order_select(v)
             ser = self.get_serializer(lesson, many=True)
-            result["data"][key] = {
+            result["data"] = {
+                "order_id": value["order_id"],  # 订单号
                 "total_price": value["total_price"],  # 总价格
                 "order_time": value["order_time"],  # 提交订单的时间
                 "isorderstatus": value["isorderstatus"],  # 是否结算
@@ -901,5 +937,3 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             }
 
         return Response(result)
-
-        # 我的订单

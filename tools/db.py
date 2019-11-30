@@ -34,3 +34,18 @@ def update_pwd(user_id,up_pwd):
         cursor.close()
         conn.close()
 
+
+# 重置登陆密码
+def update_phone(user_id,phone):
+    try:
+        conn =get_conn()
+        cursor = conn.cursor()
+        sql = "update  yk_user set yk_phone=%s where id = %s"
+        cursor.execute(sql,(phone,user_id))
+        conn.commit()
+        return True
+    except:
+        return None
+    finally:
+        cursor.close()
+        conn.close()

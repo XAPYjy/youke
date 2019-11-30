@@ -236,7 +236,9 @@ class Order(YkOrder):
             items = YkOrder.objects.filter(yk_user_id=user_id)
             good_id_dict = {}
             for item in items:
-                good_id_dict[item.id] = {
+                order_id = "order" + str(item.id)
+                good_id_dict[order_id] = {
+                    "order_id": item.id,
                     "goods_id": item.yk_goods_id,
                     "total_price": item.yk_total_price,
                     "order_time": item.yk_order_time,
