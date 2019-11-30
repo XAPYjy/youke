@@ -10,5 +10,6 @@ urlpatterns = [
     path('get_cart', get_cart),
     path('buy_lesson',buy_lesson),
     path('after_buy',after_buy),
-    path('bag',My_Bought)
+    path('bag',My_Bought),
+    path('delesson/',delesson)
 ]

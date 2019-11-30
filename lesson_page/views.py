@@ -160,10 +160,11 @@ def add2cart(request):
     if request.method == 'POST':
         json_data = req2json(request)
         token = json_data.get('token')  # token验证用户的登陆状态
+        pid = json_data.get('lessonId')
         print('token', token)
         # token = request.POST.get('token')
         # pid = request.POST.get('lessonId')
-        pid = json_data.get('lessonId')
+
         user_id = valid_token(token)
         lesson_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0]
         print('lesson_price=', lesson_price)
@@ -201,19 +202,19 @@ def add2cart(request):
 # 前端页面点击购买按钮，后台做的操作
 def buy_lesson(request):
     if request.method =='POST':
-        json_data = req2json(request)
-        token = json_data.get('token')  # token验证用户的登陆状态
-        print('token', token)
-        pid = int(json_data.get('lessonId'))
-        # token = request.POST.get('token')
-        # pid = int(request.POST.get('lessonId'))
-
+        # json_data = req2json(request)
+        # token = json_data.get('token')  # token验证用户的登陆状态
+        # print('token', token)
+        # pid = int(json_data.get('lessonId'))
+        token = request.POST.get('token')
+        pid = int(request.POST.get('lessonId'))
         if not token:
             return JsonResponse({
                 'code': 1,
                 'msg': '未登录,请重新登陆'})
         user_id = valid_token(token)
         carts = Bags.objects.filter(yk_user_id=user_id).values_list('yk_lesson_id')
+        print(carts)
         order_list = []
         for i in carts:
             order_list.append(i[0])
