@@ -49,15 +49,15 @@
 </footer>
 
 {% include 'basic/js.html' %}
-    <script>
-        function init_es() {
-            fetch('/init_es/')
-                .then(resp=>resp.json())
-                .then(data=>{
-                    alert(data.msg);
-                })
-        }
-    </script>
+<script>
+    function init_es() {
+        fetch('/init_es/')
+            .then(resp=>resp.json())
+            .then(data=>{
+                alert(data.msg);
+            })
+    }
+</script>
 {% block js %}
 
 {% endblock %}

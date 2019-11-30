@@ -1,7 +1,8 @@
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
-from back_system.models import *
+
+from yk_models.models import SysRole
 
 
 class SRoleView(View):

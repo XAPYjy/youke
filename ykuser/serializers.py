@@ -258,3 +258,17 @@ class ClassCardSerializes(serializers.ModelSerializer):
     class Meta:
         model = YkLesson
         fields = ["lesson_name", "video_link", "lesson_describe", "watch_amount", "lesson_img", "lesson_price"]
+
+
+# 我的订单
+class OrderCardSerializes(serializers.ModelSerializer):
+    lesson_name = serializers.CharField(max_length=20, source='yk_lesson_name')  # 课程名称
+    video_link = serializers.CharField(max_length=20, source='yk_video_jump_link')  # 课程地址
+    lesson_describe = serializers.CharField(max_length=20, source='yk_lesson_describe')  # 课程描述
+    watch_amount = serializers.CharField(max_length=20, source='yk_watch_amount')  # 课程观看数
+    lesson_img = serializers.CharField(max_length=20, source='yk_lesson_img')  # 课程图片
+    lesson_price = serializers.CharField(max_length=20, source='yk_lesson_price')  # 课程价格
+
+    class Meta:
+        model = YkLesson
+        fields = ["lesson_name", "video_link", "lesson_describe", "watch_amount", "lesson_img", "lesson_price"]

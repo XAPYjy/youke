@@ -1,10 +1,12 @@
 from django.http import HttpRequest, JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
-from back_system.models import *
+
 from back_system.common import make_pwd, es_
 
 from django.db import connection
+
+from yk_models.models import SysUser
 
 
 def index_view(request: HttpRequest):
@@ -52,15 +54,9 @@ class ESView(View):
         es_.create_index()
 
         cursor = connection.cursor()
-        cursor.execute('select id,name,ord_sn,parent_id from t_category')
+        cursor.execute('select * from mysql.sys_role')
         for row in cursor.fetchall():
-            doc = {
-                'id': row[0],
-                'name': row[1],
-                'ord_sn': row[2],
-                'parent_id': row[3]
-            }
-            es_.add_doc(doc, 'category')
+            print(row)
 
         return JsonResponse({
             'status': 0,

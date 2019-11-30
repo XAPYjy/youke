@@ -39,7 +39,16 @@
         {% for lesson in lessons %}
             <tr>
                 <td>{{ lesson.id }}</td>
-                <td><video  controls width="120"height="120" preload="none"><source src= "{{ lesson.yk_video_jump_link }}" type="video/mp4"></video></td>
+{#                <td><video  controls width="120"height="120" preload="none"><source src= "{{ lesson.yk_video_jump_link }}" type="video/mp4"></video></td>#}
+                <td>
+
+
+{#                    <a  href='http://localhost:8000/back/video/{{ lesson.yk_video_jump_link|spilt_url }}/' >点击播放</a>#}
+                    <a onclick="javascrtpt:window.location.href='http://localhost:8000/back/video/{{ lesson.yk_video_jump_link|spilt_url }}/'" class="btn btn-info" data-toggle="modal" data-target="#add1" style="margin: 5px 0">点击播放</a>
+
+{#                    <button style="width: 60px;height: 60px" value="点击播放"  onclick="javascrtpt:window.location.href='http://localhost:8000/back/video/{{ lesson.yk_video_jump_link|spilt_url }}/'  ">点击播放</button>#}
+
+                </td>
                 <td>{{ lesson.yk_lesson_name }}</td>
                 <td>{{ lesson.yk_lesson_price }}</td>
                 <td>{{ lesson.yk_lesson_price_type }}</td>
@@ -60,21 +69,28 @@
                 <td>{{ lesson.yk_class_size }}</td>
                 <td>{{ lesson.yk_lesson_click }}</td>
                 <td>
+
                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
-                       onclick="edit({{ lesson.id }}, '{{ lesson.yk_video_jump_link }}','{{ lesson.yk_lesson_name }}',
-                               {{ lesson.yk_lesson_price }},'{{ lesson.yk_lesson_price_type }}',{{ lesson.yk_lesson_dis_price }},
-                               '{{ lesson.yk_teacher_describe }}','{{ lesson.yk_lesson_describe }}','{{ lesson.yk_lesson_contents }}',
-                               '{{ lesson.yk_lesson_contents_mark }}','{{ lesson.yk_lesson_img }}','{{ lesson.yk_rotaion_id }}',
-                               '{{ lesson.yk_recommend_id }}','{{ lesson.yk_user_id }}','{{ lesson.yk_buy_amount }}',
-                               '{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}','{{ lesson.yk_one_list_id }}',
-                               '{{ lesson.yk_tow_list_id }}','{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')">编辑</a>
-                    <a onclick="delete_lesson({{ lesson.id }}, '{{ lesson.yk_video_jump_link }}','{{ lesson.yk_lesson_name }}',
-                               {{ lesson.yk_lesson_price }},'{{ lesson.yk_lesson_price_type }}',{{ lesson.yk_lesson_dis_price }},
-                               '{{ lesson.yk_teacher_describe }}','{{ lesson.yk_lesson_describe }}','{{ lesson.yk_lesson_contents }}',
-                               '{{ lesson.yk_lesson_contents_mark }}','{{ lesson.yk_lesson_img }}','{{ lesson.yk_rotaion_id }}',
-                               '{{ lesson.yk_recommend_id }}','{{ lesson.yk_user_id }}','{{ lesson.yk_buy_amount }}',
-                               '{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}','{{ lesson.yk_one_list_id }}',
-                               '{{ lesson.yk_tow_list_id }}','{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')" class="btn btn-danger btn-sm">删除</a>
+                       onclick="edit({{ lesson.id }}, '{{ lesson.yk_video_jump_link }}',
+                               '{{ lesson.yk_lesson_name }}','{{ lesson.yk_lesson_price }}',
+                               '{{ lesson.yk_lesson_price_type }}','{{ lesson.yk_lesson_dis_price }}',
+                               '{{ lesson.yk_teacher_describe }}','{{ lesson.yk_lesson_describe }}',
+                               '{{ lesson.yk_lesson_contents }}','{{ lesson.yk_lesson_contents_mark }}',
+                               '{{ lesson.yk_lesson_img }}','{{ lesson.yk_rotaion_id }}','{{ lesson.yk_recommend_id }}'
+                               ,'{{ lesson.yk_user_id }}','{{ lesson.yk_buy_amount }}'
+                               ,'{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}'
+                               ,'{{ lesson.yk_one_list_id }}','{{ lesson.yk_tow_list_id }}',
+                               '{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')">编辑</a>
+                    <a onclick="delete_lesson({{ lesson.id }}, '{{ lesson.yk_video_jump_link }}',
+                            '{{ lesson.yk_lesson_name }}','{{ lesson.yk_lesson_price }}',
+                            '{{ lesson.yk_lesson_price_type }}','{{ lesson.yk_lesson_dis_price }}',
+                            '{{ lesson.yk_teacher_describe }}','{{ lesson.yk_lesson_describe }}',
+                            '{{ lesson.yk_lesson_contents }}','{{ lesson.yk_lesson_contents_mark }}',
+                            '{{ lesson.yk_lesson_img }}','{{ lesson.yk_rotaion_id }}','{{ lesson.yk_recommend_id }}'
+                            ,'{{ lesson.yk_user_id }}','{{ lesson.yk_buy_amount }}'
+                            ,'{{ lesson.yk_watch_amount }}','{{ lesson.yk_course_chapter }}'
+                            ,'{{ lesson.yk_one_list_id }}','{{ lesson.yk_tow_list_id }}',
+                            '{{ lesson.yk_class_size }}','{{ lesson.yk_lesson_click }}')" class="btn btn-danger btn-sm">删除</a>
                 </td>
             </tr>
         {% endfor %}
@@ -209,7 +225,7 @@
                         <ul>
                             <li>
                                 <label><span>ID ：</span></label>
-                                <input id='edit_id' type="text" name="lesson_id"/>
+                                <input id='edit_id' type="text" name="lessonlist_id"/>
                             </li>
                              <li>
                                 <label><span>链接 ：</span></label>
@@ -323,6 +339,7 @@
 
 {% block js %}
     <script>
+
         function edit(id, yk_video_jump_link,yk_lesson_name,yk_lesson_price,
                       yk_lesson_price_type,yk_lesson_dis_price,yk_teacher_describe,
                       yk_lesson_describe,yk_lesson_contents,yk_lesson_contents_mark,

@@ -3,7 +3,6 @@ from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from class_ls.models import *
-import redis
 
 #对模型类进行序列化
 class FirstclassSerializer(serializers.ModelSerializer):

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Play</title>
+    <link href="{% static 'css/video-js.css' %}" rel="stylesheet">
+    <link href="{% static 'css/my.css' %}" rel="stylesheet">
+</head>
+<body background="/s/img/bg-login.png">
+
+<video id='my-video' class='video-js'
+       controls preload='auto'
+       width='640' height='480'
+       poster='../../../statics/poster.png' data-setup='{}' style="margin: 50px auto">
+    <!--<source src="rtmp://121.199.63.71/vod/day04_01.mp4" type="rtmp/clv">-->
+    <source src="rtmp://47.92.132.161/vod/{{ video_url }}" type="rtmp/clv"></source>
+</video>
+
+
+<script src="{% static 'js/video.js' %}"></script>
+<script src='{% static 'js/video-ie8.js' %}'></script>
+<script src="{% static 'js/video-flash.js' %}"></script>
+</body>
+</html>

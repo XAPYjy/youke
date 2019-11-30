@@ -36,14 +36,14 @@
     </table>
     <center>
         <a href="{% url 'bk:lf' 1 %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">首页</button></a>
-        {% if firstlist.has_previous %}
-            <a href="{% url 'bk:lf' firstlist.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% if firstlists.has_previous %}
+            <a href="{% url 'bk:lf' firstlists.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
         {% else %}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是首页了！！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
         {% endif %}
 
-        {% if firstlist.has_next %}
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:lf' firstlist.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% if firstlists.has_next %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:lf' firstlists.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
         {% else %}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
         {% endif %}
@@ -68,7 +68,7 @@
                                 <input type="text" name="firstlist_id"/>
                             </li>
                             <li>
-                                <label><span>一级分类名：</span></label>
+                                <label><span>一级类名：</span></label>
                                 <input type="text" name="name"/>
                             </li>
                         </ul>

@@ -24,10 +24,10 @@ class LessonFirstView(View):
             pagenumber -= 1
         if pagenumber < 1:
             pagenumber += 1
-            firstlists = paginator.page(pagenumber)
+        firstlists = paginator.page(pagenumber)
         return render(request, 'lesson_mgr/firstlist.html', locals())
 
-    def post(self, request:HttpResponse):
+    def post(self, request:HttpResponse,pagenumber=1):
         id = request.POST.get('first_id')
         firstid = request.POST.get("firstlist_id",None)
         firstname = request.POST.get("name")
@@ -42,7 +42,7 @@ class LessonFirstView(View):
             firstlist = YkFirstclass.objects.create(yk_firstclassid=firstid,yk_firstclassname=firstname)
         return redirect('/back/lfirst/')
 
-    def delete(self, request):
+    def delete(self, request,pagenumber=1):
         firstlist_id = request.GET.get('id')
         firstlist = YkFirstclass.objects.get(pk=firstlist_id)
         firstlist.delete()
