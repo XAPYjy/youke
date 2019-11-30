@@ -23,7 +23,7 @@ def compute(money, integral):
         member = "红柚"
         discount = "0.85"
     elif integral <= 5000:
-        member = "金苗"
+        member = "金柚"
         discount = "0.8"
     item_dict = {
         "money": money,
