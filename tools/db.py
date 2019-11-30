@@ -12,6 +12,15 @@ def get_conn():
     return conn
 
 
+def delete_user(user_id):
+    conn =get_conn()
+    cursor = conn.cursor()
+    sql = "delete from  yk_user where id=%s"
+    cursor.execute(sql,(user_id,))
+    conn.commit()
+
+if __name__ == '__main__':
+    delete_user(4)
 # def delete_user(user_id):
 # #     conn =get_conn()
 # #     cursor = conn.cursor()

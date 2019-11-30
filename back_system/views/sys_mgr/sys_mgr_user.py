@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from back_system.common import make_pwd
-from back_system.models import SysUser, SysUserRole, SysRole
+from yk_models.models import SysUser
 
 
 class SUserView(View):

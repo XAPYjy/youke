@@ -68,6 +68,13 @@ def get_cart(request):
 # 前端页面点击 点击购买按钮，可能携带商品id列表
 def buy_lesson(request):
     if request.method == 'POST':
+        # usid = request.POST.get('token')
+        # user_id = valid_token(usid)
+        # pids = request.POST.get('lessonId').split(',')
+        #
+        # print(pids)
+        # print(type(pids))
+        global pids
         json_data = req2json(request)
         if json_data == 1:
             result = {
@@ -78,48 +85,78 @@ def buy_lesson(request):
 
         token = json_data.get('token')  # token验证用户的登陆状态
         print('token', token)
-
+        user_id = valid_token(token)
         if not token:
             return JsonResponse({
                 'code': 1,
                 'msg': '未登录,请重新登陆'})
-        pids = list(json_data.get('pid'))
+        pids = json_data.get('lessonId')
+
+        if  len(pids) > 7:
+            pids = pids.split(',')
+
+
         if not pids:
             return JsonResponse({
                 'code': 3,
                 'msg': '未选择商品是不能点击购买的吆~~~'
             })
-        user_id = valid_token(token)
+        #user_id = valid_token(token)
         carts = YkOrder.objects.filter(yk_user_id=user_id).values_list('yk_goods_id')
+        print('carts=',carts)
         order_list = []
-        nums = []
         for i in carts:
-            order_list.append(i[0])
+            print('i=',i)
+            i = i[0].lstrip('[').rstrip(']').split(',')
+            for j in i:
+                order_list.append(int(j))
         total_price = 0
-        for pid in pids:
-            pid = int(pid)
-            if pid in order_list:
-                lessonname = YkLesson.objects.filter(id=pid).values('yk_lesson_name')[0]
+        nums = []
+        print('type(pids)',type(pids))
+        print('pids=', pids)
+        if len(pids) <= 6:
+            nums = int(pids)
+            if nums in order_list:
+                lessonname = YkLesson.objects.filter(id=nums).values('yk_lesson_name')[0]
                 result = {
                     "code": 0,
-                    "msg": str(lessonname['yk_lesson_name']) + "已存在订单中，请勿重新添加！！！"
+                    "msg": str(lessonname['yk_lesson_name']) + "已存在购物车中，请勿重新添加！！！"
                 }
                 return JsonResponse(result)
             else:
-                yk_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0] * float(
-                    YkWallet.objects.filter(yk_user_id=user_id).values('yk_discount')[0]['yk_discount'])
-                total_price += yk_price
-                YkOrder.objects.create(yk_goods_id=pid,
-                                       yk_total_price=total_price,
-                                       yk_isorderstatus=None,
-                                       yk_user_id=user_id)
-                num = YkOrder.objects.filter(yk_goods_id=pid, yk_user_id=user_id).values('id')[0]['id']
-                nums.append(num)
+                discount = YkWallet.objects.filter(yk_user_id=user_id).values('yk_discount')[0]['yk_discount']
+                print('discount=', discount)
+                lesson = YkLesson.objects.filter(id=pids).values_list('yk_lesson_price')[0][0]
+                print(lesson)
+                yk_price = lesson * float(discount)
+                total_price = yk_price
+        else:
+            for pid in pids:
+                pid = int(pid)
+                nums.append(pid)
+                if pid in order_list:
+                    lessonname = YkLesson.objects.filter(id=pid).values('yk_lesson_name')[0]
+                    result = {
+                        "code": 0,
+                        "msg": str(lessonname['yk_lesson_name']) + "已存在购物车中，请勿重新添加！！！"
+                    }
+                    return JsonResponse(result)
+                else:
+                    discount = YkWallet.objects.filter(yk_user_id=user_id).values('yk_discount')[0]['yk_discount']
+                    print('discount=', discount)
+                    yk_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0] * float(discount)
+                    total_price += yk_price
+        YkOrder.objects.create(yk_goods_id=[nums],
+                               yk_total_price=total_price,
+                               yk_isorderstatus=None,
+                               yk_user_id=user_id)
+
+        ordernums = YkOrder.objects.filter(yk_goods_id=nums, yk_user_id=user_id).values('id')[0]['id']
 
         result = {
             "code": 0,
             'msg': '已添加至订单中，请跳转支付！！',
-            'orderid': nums,  # 此参数用作，支付成功后修改相关参数
+            'orderId': ordernums,  # 此参数用作，支付成功后修改相关参数
             'total_price': total_price
         }
     else:
@@ -135,11 +172,14 @@ def buy_lesson(request):
 
 def after_buy(request):
     if request.method == "POST":
+        global result
+        # token = request.POST.get('token')
+        # num = request.POST.get('orderId')
         json_data = req2json(request)
         token = json_data.get('token')  # token验证用户的登陆状态
         print('token', token)
-        num = json_data.get("orderid")  # 接收请求体中的orderid参数
-        print(num)
+        num = json_data.get("orderId")  # 接收请求体中的orderid参数
+        # print('num=',num)
         if not token:
             print("没有接收到token")
             return JsonResponse({"1111": "没有接收到！"})
@@ -148,42 +188,92 @@ def after_buy(request):
         except:
             print('没有登录！')
             return JsonResponse({"1111": "没有接收到！"})
-        goodsid = list(YkOrder.objects.filter(id=num, yk_user_id=user_id).values('yk_goods_id')[0]['yk_goods_id'])
-        print(goodsid)
-        for goodid in goodsid:
-            global result
-            bag = Bags.objects.filter(yk_lesson_id__in=goodid, yk_user_id=user_id)
-            now = time.localtime()
-            t62 = time.strftime("%Y-%m-%d %H:%M:%S", now)
-            try:
-                bag.update(yk_time=t62, yk_goods_type=True)  # 修改一条购物车记录
-                order_or = YkOrder.objects.filter(id=num).first()
-                order_or.yk_isorderstatus = True
-                order_or.yk_order_time = t62
-                order_or.save()
-                carts = Bags.objects.filter(yk_user_id=user_id, yk_goods_type=False)  # 查询登录用户的所有未购买商品
-                list_cart_id = []
-                # 循环出所有登录用户的未购买购物记录,并添加到列表
-                for cart in carts:
-                    list_cart_id.append(cart.yk_lesson_id)
-                list_id = []
-                for i in list_cart_id:
-                    carts1 = \
-                        YkLesson.objects.filter(id=i).values('id', 'yk_lesson_name', 'yk_course_chapter',
-                                                             'yk_lesson_price',
-                                                             'yk_lesson_img')[0]
-                    list_id.append(carts1)
+        goodsid = YkOrder.objects.filter(id=num, yk_user_id=user_id).values('yk_goods_id')[0]['yk_goods_id']
 
-                result = {
-                    'code': 0,
-                    'msg': '商品已成功购买',
-                    'wgm': list_id
-                }
-            except:
+        now = time.localtime()
+        t62 = time.strftime("%Y-%m-%d %H:%M:%S", now)
+        if len(goodsid) >= 10:
+            goodsid = goodsid.lstrip('[').rstrip(']').split(',')
+            print('type(goodsid=)', type(goodsid))
+            print(2)
+        else:
+            print(1)
+            goodsid = int(goodsid.lstrip('[').rstrip(']'))
+            bag = Bags.objects.filter(yk_lesson_id=goodsid, yk_user_id=user_id).first()
+            print('单个的bag=', bag)
+            bag.yk_time = t62
+            bag.yk_goods_type = True
+            bag.save()
+            # 修改一条订单记录
+            order_or = YkOrder.objects.filter(id=num).first()
+            print('单个的order_or=', order_or)
+            order_or.yk_isorderstatus = True
+            order_or.yk_order_time = t62
+            order_or.save()
+            carts = Bags.objects.filter(yk_user_id=user_id, yk_goods_type=False)  # 查询登录用户的所有未购买商品
+            list_cart_id = []
+            # 循环出所有登录用户的未购买购物记录,并添加到列表
+            for cart in carts:
+                list_cart_id.append(cart.yk_lesson_id)
+            list_id = []
+            for i in list_cart_id:
+                carts1 = \
+                    YkLesson.objects.filter(id=i).values('id', 'yk_lesson_name', 'yk_course_chapter',
+                                                         'yk_lesson_price',
+                                                         'yk_lesson_img')[0]
+                list_id.append(carts1)
+
+            result = {
+                'code': 0,
+                'msg': '商品已成功购买',
+                'wgm': list_id
+            }
+            return JsonResponse(result)
+        for g in range(len(goodsid)):
+            print('goodsid=',goodsid)
+            goodid = int(goodsid[g])
+            print('循环遍历的goodid',goodid)
+            try:
+                # 修改一条购物车记录
+                print("22222")
+                bag = Bags.objects.filter(yk_lesson_id=goodid, yk_user_id=user_id).first()
+                print('循环的bag=',bag)
+                bag.yk_time = t62
+                bag.yk_goods_type = True
+                bag.save()
+                # 修改一条订单记录
+
+            except Exception as e:
                 result = {
                     'code': 1,
                     'msg': '商品购买失败！'
                 }
+                print(e)
+        order_or = YkOrder.objects.filter(id=num).first()
+        print('order_or=', order_or)
+        order_or.yk_isorderstatus = True
+        order_or.yk_order_time = t62
+        order_or.save()
+        carts = Bags.objects.filter(yk_user_id=user_id, yk_goods_type=False).all()  # 查询登录用户的所有未购买商品
+        list_cart_id = []
+        # 循环出所有登录用户的未购买购物记录,并添加到列表
+
+        for cart in carts:
+            print('cart=', cart)
+            list_cart_id.append(cart.yk_lesson_id)
+        list_id = []
+        for i in list_cart_id:
+            carts1 = \
+                YkLesson.objects.filter(id=i).values('id', 'yk_lesson_name', 'yk_course_chapter',
+                                                     'yk_lesson_price',
+                                                     'yk_lesson_img')[0]
+            list_id.append(carts1)
+
+        result = {
+            'code': 0,
+            'msg': '商品已成功购买',
+            'wgm': list_id
+        }
     else:
         result = {
             'error': 2,
@@ -228,3 +318,29 @@ def My_Bought( request):
             'msg': '请求方式不对，请正确访问！！！'
         }
     return JsonResponse(result)
+
+#删除未购买!
+def delesson(request):
+    if request.method == "POST":
+        token = request.POST.get('token')
+        pid = int(request.POST.get('lessonId'))
+        # json_data = req2json(request)
+        # token = json_data.get('token')  # token验证用户的登陆状态
+        # print('token', token)
+        #pid = int(json_data.get('lessonId'))
+        if not token:
+            return JsonResponse({
+                'code': 1,
+                'msg': '未登录,请重新登陆'})
+        user_id = valid_token(token)
+        print('pid=',pid)
+        print(type(pid))
+        bag = Bags.objects.filter(yk_user_id=user_id,yk_lesson_id=pid,yk_goods_type=False).first()
+        print('bag=',bag)
+        bag.delete()
+        bag = Bags.objects.filter(yk_user_id=user_id,yk_goods_type=False).values()
+        result = {
+            'error':0,
+            'msg':'删除成功！'
+        }
+        return JsonResponse(result)

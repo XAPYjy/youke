@@ -9,31 +9,36 @@ from yk_models.models import *
 
 class LessonMessageView(View):
     def get(self, request,pagenumber=1):
-        if request.GET.get('id',''):
-            lesson = YkLesson.objects.get(pk=request.GET.get('id'))
-            print('******'*10)
+        lessonid = request.GET.get('id','')
+        print(type(lessonid))
+        if lessonid:
+            print('id1=',id)
+
+            lessonlist = YkLesson.objects.filter(id=lessonid)
+            print(lessonlist)
+
             return  JsonResponse({
-                'id': lesson.id,
-                'yk_video_jump_link':lesson.yk_video_jump_link,
-                'yk_lesson_name':lesson.yk_lesson_name,
-                'yk_lesson_price':lesson.yk_lesson_price,
-                'yk_lesson_price_type':lesson.yk_lesson_price_type,
-                'yk_lesson_dis_price':lesson.yk_lesson_dis_price,
-                'yk_teacher_describe':lesson.yk_teacher_describe,
-                'yk_lesson_describe':lesson.yk_lesson_describe,
-                'yk_lesson_contents':lesson.yk_lesson_contents,
-                'yk_lesson_contents_mark':lesson.yk_lesson_contents_mark,
-                'yk_lesson_img':lesson.yk_lesson_img,
-                'yk_rotaion_id':lesson.yk_rotaion_id,
-                'yk_recommend_id':lesson.yk_recommend_id,
-                'yk_user_id':lesson.yk_user_id,
-                'yk_buy_amount':lesson.yk_buy_amount,
-                'yk_watch_amount':lesson.yk_watch_amount,
-                'yk_course_chapter':lesson.yk_course_chapter,
-                'yk_one_list_id':lesson.yk_one_list_id,
-                'yk_tow_list_id':lesson.yk_tow_list_id,
-                'yk_class_size':lesson.yk_class_size,
-                'yk_lesson_click':lesson.yk_lesson_click,
+                'id': lessonlist.id,
+                'yk_video_jump_link':lessonlist.yk_video_jump_link,
+                'yk_lesson_name':lessonlist.yk_lesson_name,
+                'yk_lesson_price':lessonlist.yk_lesson_price,
+                'yk_lesson_price_type':lessonlist.yk_lesson_price_type,
+                'yk_lesson_dis_price':lessonlist.yk_lesson_dis_price,
+                'yk_teacher_describe':lessonlist.yk_teacher_describe,
+                'yk_lesson_describe':lessonlist.yk_lesson_describe,
+                'yk_lesson_contents':lessonlist.yk_lesson_contents,
+                'yk_lesson_contents_mark':lessonlist.yk_lesson_contents_mark,
+                'yk_lesson_img':lessonlist.yk_lesson_img,
+                'yk_rotaion_id':lessonlist.yk_rotaion_id,
+                'yk_recommend_id':lessonlist.yk_recommend_id,
+                'yk_user_id':lessonlist.yk_user_id,
+                'yk_buy_amount':lessonlist.yk_buy_amount,
+                'yk_watch_amount':lessonlist.yk_watch_amount,
+                'yk_course_chapter':lessonlist.yk_course_chapter,
+                'yk_one_list_id':lessonlist.yk_one_list_id,
+                'yk_tow_list_id':lessonlist.yk_tow_list_id,
+                'yk_class_size':lessonlist.yk_class_size,
+                'yk_lesson_click':lessonlist.yk_lesson_click,
 
             })
         lessons = YkLesson.objects.all()
@@ -45,8 +50,9 @@ class LessonMessageView(View):
         lessons = paginator.page(pagenumber)
         return render(request, 'lesson_mgr/message.html', locals())
 
-    def post(self, request:HttpResponse):
-        id = request.POST.get("lesson_id",None)
+    def post(self, request:HttpResponse,pagenumber=1):
+        id = request.POST.get("lessonlist_id",None)
+        print('id=',id)
         link = request.POST.get("link")
         name = request.POST.get("name")
         price = request.POST.get("price")
@@ -109,7 +115,7 @@ class LessonMessageView(View):
 
     def delete(self, request):
         lesson_id = request.GET.get('id')
-        lessonid = YkFirstclass.objects.get(pk=lesson_id)
+        lessonid = YkLesson.objects.get(pk=lesson_id)
         lessonid.delete()
 
         return JsonResponse({

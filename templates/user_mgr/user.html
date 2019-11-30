@@ -31,7 +31,7 @@
                 <td>
                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
                        onclick="edit({{ uuser.id }}, '{{ uuser.yk_name }}','{{ uuser.yk_auto_string }}','{{ uuser.yk_emil }}','{{ uuser.yk_phone }}')">编辑</a>
-                    <a onclick="delete_uuser({{ uuser.id }}, '{{ uuser.yk_name }}','{{ uuser.yk_auto_string }}','{{ uuser.yk_emil }}','{{ uuser.yk_phone }}')" class="btn btn-danger btn-sm">注销</a>
+                    <a onclick="delete_user({{ uuser.id }}, '{{ uuser.yk_name }}')" class="btn btn-danger btn-sm">注销</a>
                 </td>
             </tr>
         {% endfor %}
@@ -39,19 +39,19 @@
     </table>
     <center>
         <a href="{% url 'bk:uu' 1 %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">首页</button></a>
-        {% if uuser.has_previous %}
-            <a href="{% url 'bk:uu' uuser.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
+        {% if uusers.has_previous %}
+            <a href="{% url 'bk:uu' uusers.previous_page_number%}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
         {% else %}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是首页了！！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">上一页</button></a>
         {% endif %}
 
-        {% if uuser.has_next %}
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:uu' uuser.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+        {% if uusers.has_next %}
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:uu' uusers.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
         {% else %}
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
         {% endif %}
 
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:uu' uuser.num_pages %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">末页</button></a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:uu' paginator.num_pages %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">末页</button></a>
     </center>
 
 
@@ -112,7 +112,7 @@
                         <ul>
                             <li>
                                 <label><span>用户ID ：</span></label>
-                                <input id="edit_id" type="text" name="uuser_id" />
+                                <input id="edit_id" type="text" name="user_id" />
                             </li>
                             <li>
                                 <label><span>用户名 ：</span></label>
@@ -181,7 +181,7 @@
         }
 
         var uuser_id = 0;
-        function delete_uuser(uuserid, uuser_name) {
+        function delete_user(uuserid, uuser_name) {
             uuser_id = uuserid;
             $('#msg').html('是否注销 '+ uuser_name+" ?");
             $('#info').modal('toggle');
