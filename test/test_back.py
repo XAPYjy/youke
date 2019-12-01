@@ -8,7 +8,7 @@ import xlrd
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
-base_url = 'http://localhost:8000'
+base_url = 'http://47.92.132.161:9001'
 
 login_url = base_url+'/back/login/'
 user_name = 'admin'
