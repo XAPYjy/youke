@@ -8,7 +8,7 @@
 
 {% block content %}
 {#    <a href="#" class="btn btn-success" data-toggle="modal" data-target="#add1" style="margin: 5px 0">添加</a>#}
-    <table class="table table-bordered table-striped text-center bg-info">
+    <table id="table_user" class="table table-bordered table-striped text-center bg-info">
         <thead>
         <tr class="info">
             <th class="text-center">ID</th>
@@ -31,7 +31,7 @@
                 <td>
                     <a href="#" class="btn btn-info btn-sm" data-toggle="modal"
                        onclick="edit({{ uuser.id }}, '{{ uuser.yk_name }}','{{ uuser.yk_auto_string }}','{{ uuser.yk_emil }}','{{ uuser.yk_phone }}')">编辑</a>
-                    <a onclick="delete_user({{ uuser.id }}, '{{ uuser.yk_name }}')" class="btn btn-danger btn-sm">注销</a>
+                    <a id="del_user" onclick="delete_user({{ uuser.id }}, '{{ uuser.yk_name }}')" class="btn btn-danger btn-sm">注销</a>
                 </td>
             </tr>
         {% endfor %}
@@ -161,7 +161,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">取消</button>
-                    <button onclick="delete_ajax()" class="btn btn-warning btn-sm">确定</button>
+                    <button id="del_sure" onclick="delete_ajax()" class="btn btn-warning btn-sm">确定</button>
                 </div>
 
             </div>

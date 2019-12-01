@@ -44,7 +44,8 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         except:
             return None
 
-    def list(self, request, *args, **kwargs):
+    @action(methods=["get"], detail=False)
+    def auth(self, request):
         user_id = self.token_(request)  # 验证token是否存在
         if not user_id:
             result = {
@@ -55,7 +56,17 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
         infor = InFor().select_infor_all(userid=user_id)
         pack = Pack().select_pack_all(user_id=user_id)
+        print(pack)
         if infor:
+            if not pack:
+                result = {
+                    "status": 0,
+                    "msg": infor.yk_nickname,
+                    "head": infor.yk_avatar,
+                    "integral": 0,
+                    "member": "柚籽",
+                }
+                return Response(result)
             result = {
                 "status": 0,
                 "msg": infor.yk_nickname,
@@ -64,6 +75,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
                 "member": pack.yk_member,
             }
             return Response(result)
+
         else:
             result = {
                 "status": 1,
