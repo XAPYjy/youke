@@ -25,6 +25,7 @@ class YKUser(YkUser):
         managed = False
         db_table = 'yk_user'
 
+
 # 个人资料类
 class InFor(YkInformation):
     def select_infor_all(self, userid):
@@ -34,7 +35,7 @@ class InFor(YkInformation):
         except:
             return None
 
-    def save_infor(self, user_id, nikname=None, name=None,sex=None,
+    def save_infor(self, user_id, nikname=None, name=None, sex=None,
                    age=None, career=None, hobby=None, signature=None):
         """
         :param nikname: 昵称
@@ -239,7 +240,9 @@ class Order(YkOrder):
             items = YkOrder.objects.filter(yk_user_id=user_id)
             good_id_dict = {}
             for item in items:
-                good_id_dict[item.id] = {
+                order_id = "order" + str(item.id)
+                good_id_dict[order_id] = {
+                    "order_id": item.id,
                     "goods_id": item.yk_goods_id,
                     "total_price": item.yk_total_price,
                     "order_time": item.yk_order_time,
