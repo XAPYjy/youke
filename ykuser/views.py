@@ -231,7 +231,8 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         name = ser.data["name"]
         flag = request.data["flag"]  # 登录验证
         token = new_token()  # 定义token
-        user = YKUser().select_all(name=name, phone=name)
+        user = YKUser().select_all(name=name)
+        print(user)
         print(flag, type(flag))
         if not flag or (not user.sys_auth):
             result = {

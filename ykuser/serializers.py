@@ -93,7 +93,7 @@ class UserLoginSerializer(serializers.Serializer):
             raise YKException("用户名不能为空！")
         if not pwd:
             raise YKException("密码不能为空！")
-        if not YKUser().select_all(name=name,phone=name):
+        if not YKUser().select_all(name=name):
             raise YKException("用户名错误！")
         if not YKUser().select_all(pwd=encode4md5(pwd)):
             raise YKException("密码错误！")
