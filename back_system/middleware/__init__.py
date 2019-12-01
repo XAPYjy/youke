@@ -12,7 +12,7 @@ def valid_login(view_func):
                        '/back/tuser/','/back/upload_log/','/back/init_es/','/back/video/<video_url>/']
 
     def wrapper(request: HttpRequest, *args, **kwargs):
-        if 'login_user' not in request.session.keys() and request.path  in not_valid_paths:
+        if request.path  in not_valid_paths and'login_user' not in request.session.keys():
             return redirect('bk:lg')
 
         return view_func(request, *args, **kwargs)
