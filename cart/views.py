@@ -126,7 +126,7 @@ def buy_lesson(request):
                     if order.filter(yk_isorderstatus=False).first():
                         ordernums = order.values('id')[0]['id']
                         print(ordernums)
-                        total_price = order.values('yk_total_price')[0]['yk_total_price'] * float(discount)
+                        total_price = round(order.values('yk_total_price')[0]['yk_total_price'] * float(discount),2)
                         print(total_price)
                         result = {
                             "code": 0,
@@ -142,7 +142,7 @@ def buy_lesson(request):
                 else:
                     lesson = YkLesson.objects.filter(id=pids).values_list('yk_lesson_price')[0][0]
                     print(lesson)
-                    total_price = lesson * float(discount)
+                    total_price = round(lesson * float(discount),2)
                     one = Bags.objects.filter(yk_lesson_id=pids)
 
                     if not one.filter(yk_goods_type=False).first():
@@ -184,8 +184,8 @@ def buy_lesson(request):
                         }
                         return JsonResponse(result)
                     else:
-                        yk_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0] * float(
-                            discount)
+                        yk_price = round(YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0] * float(
+                            discount),2)
                         total_price += yk_price
                         lesson = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0]
                         one = Bags.objects.filter(yk_lesson_id=pid)
@@ -200,19 +200,19 @@ def buy_lesson(request):
                                 yk_time=None,
                                 yk_video_progress=0
                             )
-            YkOrder.objects.create(yk_goods_id=nums,
-                                   yk_total_price=total_price,
-                                   yk_isorderstatus=None,
-                                   yk_user_id=user_id)
+                YkOrder.objects.create(yk_goods_id=nums,
+                                       yk_total_price=round(total_price, 2),
+                                       yk_isorderstatus=None,
+                                       yk_user_id=user_id)
 
-            ordernums = YkOrder.objects.filter(yk_goods_id=nums, yk_user_id=user_id).values('id')[0]['id']
+                ordernums = YkOrder.objects.filter(yk_goods_id=nums, yk_user_id=user_id).values('id')[0]['id']
 
-            result = {
-                "code": 0,
-                'msg': '已添加至订单中，请跳转支付！！',
-                'orderId': ordernums,  # 此参数用作，支付成功后修改相关参数
-                'total_price': total_price
-            }
+                result = {
+                    "code": 0,
+                    'msg': '已添加至订单中，请跳转支付！！',
+                    'orderId': ordernums,  # 此参数用作，支付成功后修改相关参数
+                    'total_price': round(total_price, 2)
+                }
         else:
             # 订单信息为空！
             total_price = 0
@@ -225,7 +225,7 @@ def buy_lesson(request):
                 print('discount=', discount)
                 lesson = YkLesson.objects.filter(id=pids).values_list('yk_lesson_price')[0][0]
                 print(lesson)
-                yk_price = lesson * float(discount)
+                yk_price = round(lesson * float(discount),2)
                 total_price = yk_price
                 if not one.filter(yk_goods_type=False).first():
                     Bags.objects.create(
@@ -248,7 +248,7 @@ def buy_lesson(request):
                     discount = YkWallet.objects.filter(yk_user_id=user_id).values('yk_discount')[0]['yk_discount']
                     print('discount=', discount)
                     yk_price = YkLesson.objects.filter(id=pid).values_list('yk_lesson_price')[0][0]
-                    pay_price = yk_price * float(discount)
+                    pay_price = round(yk_price * float(discount),2)
                     total_price += pay_price
                     one = Bags.objects.filter(yk_lesson_id=pid)
                     if not one.filter(yk_goods_type=False).first():
@@ -263,7 +263,7 @@ def buy_lesson(request):
                         )
             # 判断用户是否在购物车添加过正在购买的商品！，没有添加则创建购物车信息
             YkOrder.objects.create(yk_goods_id=pids,
-                                   yk_total_price=total_price,
+                                   yk_total_price=round(total_price,2),
                                    yk_isorderstatus=None,
                                    yk_user_id=user_id)
 
@@ -273,7 +273,7 @@ def buy_lesson(request):
                 "code": 0,
                 'msg': '已添加至订单中，请跳转支付！！',
                 'orderId': ordernums,  # 此参数用作，支付成功后修改相关参数
-                'total_price': total_price
+                'total_price': round(total_price,2)
             }
     else:
         result = {
