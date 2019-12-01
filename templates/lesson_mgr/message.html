@@ -8,7 +8,7 @@
 
 {% block content %}
     <a href="#" class="btn btn-success" data-toggle="modal" data-target="#add1" style="margin: 5px 0">添加</a>
-    <table class="table table-bordered table-striped text-center bg-info">
+    <table id="table_lesson" class="table table-bordered table-striped text-center bg-info">
         <thead>
         <tr class="info">
             <th class="text-center">ID</th>
@@ -44,7 +44,7 @@
 
 
 {#                    <a  href='http://localhost:8000/back/video/{{ lesson.yk_video_jump_link|spilt_url }}/' >点击播放</a>#}
-                    <a onclick="javascrtpt:window.location.href='http://localhost:8000/back/video/{{ lesson.yk_video_jump_link|spilt_url }}/'" class="btn btn-info" data-toggle="modal" data-target="#add1" style="margin: 5px 0">点击播放</a>
+                    <a id="a_video" onclick="javascrtpt:window.location.href='http://localhost:8000/back/video/{{ lesson.yk_video_jump_link|spilt_url }}/' " class="btn btn-info" data-toggle="modal" data-target="#add1" style="margin: 5px 0">点击播放</a>
 
 {#                    <button style="width: 60px;height: 60px" value="点击播放"  onclick="javascrtpt:window.location.href='http://localhost:8000/back/video/{{ lesson.yk_video_jump_link|spilt_url }}/'  ">点击播放</button>#}
 
@@ -105,9 +105,9 @@
         {% endif %}
 
         {% if lessons.has_next %}
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:ll' lessons.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a  id="bt_next" href="{% url 'bk:ll' lessons.next_page_number %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
         {% else %}
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:alert('已经是末页了！')"><button  style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">下一页</button></a>
         {% endif %}
 
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{% url 'bk:ll' paginator.num_pages %}"><button style="width: 55px;height: 35px;background-color: lightyellow;opacity: 0.8;border-radius: 20%">末页</button></a>

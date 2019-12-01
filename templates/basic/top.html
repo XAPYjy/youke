@@ -8,7 +8,7 @@
         <ul class="nav navbar-nav nav-pills right ">
 
 
-            <li class="bg-info dropdown">
+            <li id="top_aa" class="bg-info dropdown">
                 <a class="dropdown-toggle" href="#" data-toggle="dropdown">
                     <span class="glyphicon glyphicon-user"></span>&nbsp;<span>{{ request.session.login_user.name }}/{{ request.session.login_user.role_name }}</span><span class="caret"></span>
                 </a>
@@ -16,9 +16,9 @@
                     <li class="text-center"><a href="#"><span class="text-primary">账号设置</span></a></li>
                     <li class="text-center"><a href="#"><span class="text-primary">消息设置</span></a></li>
                     <li class="text-center"><a href="#"><span class="text-primary">帮助中心</span></a></li>
-                    <li class="text-center"><a onclick="init_es()"><span class="text-primary">初始化ES</span></a></li>
+                    <li  class="text-center"><a id="top_init" onclick="init_es()"><span class="text-primary">初始化ES</span></a></li>
                     <li class="divider"><a href="#"></a></li>
-                    <li class="text-center"><a href="/back/logout/"><span class="text-primary">退出</span></a></li>
+                    <li class="text-center"><a id="log_out" href="/back/logout/"><span class="text-primary">退出</span></a></li>
                 </ul>
             </li>
         </ul>

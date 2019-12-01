@@ -14,6 +14,5 @@ def valid_login(view_func):
     def wrapper(request: HttpRequest, *args, **kwargs):
         if 'login_user' not in request.session.keys() and request.path in not_valid_paths:
             return redirect('bk:lg')
-
         return view_func(request, *args, **kwargs)
     return wrapper

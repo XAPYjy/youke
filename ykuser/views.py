@@ -103,7 +103,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         make_pwd = encode4md5(pwd)  # 加密密码
         try:
             ykuser = YKUser()
-            ykuser.save_user(phone=phone, pwd=make_pwd)  # 储存数据
+            ykuser.save_user(phone=phone, pwd=make_pwd,name=phone)  # 储存数据
         except Exception as e:
             result = {
                 "status": 1,
@@ -231,7 +231,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         name = ser.data["name"]
         flag = request.data["flag"]  # 登录验证
         token = new_token()  # 定义token
-        user = YKUser().select_all(name=name)
+        user = YKUser().select_all(name=name, phone=name)
         print(flag, type(flag))
         if not flag or (not user.sys_auth):
             result = {
@@ -527,7 +527,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
                     print(e)
                     return Response(result)
             elif str(transType) == "1":
-                sum = float(balance) - float(money)
+                sum = round(float(balance) - float(money), 2)
                 # 判断余额是否充足
                 if sum >= 0:
                     # 存储账单信息
@@ -919,7 +919,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
     # 我的订单
     @action(methods=["get"], detail=False, serializer_class=OrderCardSerializes)
-    def order(self, request):
+    def my_order(self, request):
         user_id = self.token_(request)  # 验证token是否存在
         if not user_id:
             result = {
@@ -936,16 +936,27 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
 
             }
         }
-        for key, value in orders_dict.items():
-            v = value["goods_id"].lstrip("[").rstrip("]").split(",")
-            lesson = Lesson().order_select(v)
-            ser = self.get_serializer(lesson, many=True)
-            result["data"] = {
-                "order_id": value["order_id"],  # 订单号
-                "total_price": value["total_price"],  # 总价格
-                "order_time": value["order_time"],  # 提交订单的时间
-                "isorderstatus": value["isorderstatus"],  # 是否结算
-                "goods": ser.data  # 课程详情
+        try:
+            for key, value in orders_dict.items():
+                v = value["goods_id"].lstrip("[").rstrip("]").split(",")
+                lesson = Lesson().order_select(v)
+                ser = self.get_serializer(lesson, many=True)
+                order_id = "order" + str(value["order_id"])
+                result["data"][order_id] = {
+                    "order_id": value["order_id"],  # 订单号
+                    "total_price": value["total_price"],  # 总价格
+                    "order_time": value["order_time"],  # 提交订单的时间
+                    "isorderstatus": value["isorderstatus"],  # 是否结算
+                    "goods": ser.data  # 课程详情
+                }
+            return Response(result)
+        except Exception as e:
+            result = {
+                "status": 0,
+                "msg": "订单查询成功",
+                "data": {
+                    "msg": e
+                }
             }
+            return Response(result)
 
-        return Response(result)

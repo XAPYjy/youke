@@ -3,4 +3,4 @@ import uuid
 
 
 def new_token():
-    return base64.b64encode(uuid.uuid4().hex.encode('utf-8')).decode('utf-8')
+    return str(base64.b64encode(uuid.uuid4().hex.encode('utf-8')).decode('utf-8')).rstrip("=")
