@@ -65,9 +65,8 @@ if chrome.current_url != login_url:
     time.sleep(2)
     chrome.find_element(By.ID, 'table_user').find_elements(By.TAG_NAME, "tr")[-1].find_elements(By.TAG_NAME, 'td')[-1].find_element(By.ID, 'del_user').click()
     time.sleep(2)
-    chrome.find_element(By.ID,'del_role').click()
-    time.sleep(2)
-
+    chrome.refresh()
+    time.sleep(3)
     chrome.get(base_url + '/back/uorder/')
     time.sleep(2)
     chrome.get(base_url + '/back/lfirst/')
