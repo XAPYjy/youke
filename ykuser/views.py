@@ -77,11 +77,14 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
             return Response(result)
 
         else:
-            result = {
-                "status": 1,
-                "msg": "请完善个人资料"
-            }
-            return Response(result)
+            if not pack:
+                result = {
+                    "status": 1,
+                    "msg": "请完善个人资料",
+                    "integral": 0,
+                    "member": "柚籽",
+                }
+                return Response(result)
 
     # 验证码注册
     # 由@action装饰器装饰的方法，方法名作为路径名
@@ -103,7 +106,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         make_pwd = encode4md5(pwd)  # 加密密码
         try:
             ykuser = YKUser()
-            ykuser.save_user(phone=phone, pwd=make_pwd,name=phone)  # 储存数据
+            ykuser.save_user(phone=phone, pwd=make_pwd, name=phone)  # 储存数据
         except Exception as e:
             result = {
                 "status": 1,
@@ -197,7 +200,7 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
         # 判断如果手机号没有注册，则先进行注册，在登陆
         if not user:
             pwd = encode4md5(phone[-6:])  # 默认手机号后六位
-            user = YKUser().save_user(phone=phone, pwd=pwd)
+            user = YKUser().save_user(phone=phone, pwd=pwd,name=phone)
         if not user.sys_auth:
             result = {
                 "code": 901,
@@ -960,4 +963,3 @@ class UserViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
                 }
             }
             return Response(result)
-

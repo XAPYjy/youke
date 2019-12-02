@@ -81,7 +81,7 @@ class Pack(YkWallet):
             return None
 
     # 添加钱包数据
-    def save_pack(self, user_id, money="0", integral=0, member="柚籽", discount=None):
+    def save_pack(self, user_id, money="0", integral=0, member="柚籽", discount="1"):
         """
         :param user_id: 用户id
         :param money: 余额
