@@ -26,4 +26,4 @@ serializers==0.2.4
 six==1.12.0
 sqlparse==0.3.0
 Unidecode==1.0.23
-urllib3==1.25.7
+urllib3==1.26.5
